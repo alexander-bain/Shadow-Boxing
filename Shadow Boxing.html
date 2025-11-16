@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Shadow Boxing Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NWK1FEEP7N"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-NWK1FEEP7N');
+  </script>
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      background: #111;
+      color: #f5f5f5;
+    }
+    .game {
+      max-width: 480px;
+      width: 100%;
+      background: #222;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+    }
+    h1 {
+      margin-top: 0;
+      text-align: center;
+      font-size: 1.7rem;
+    }
+    .scoreboard {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 10px;
+      border-radius: 10px;
+      background: #333;
+      font-size: 0.95rem;
+    }
+    .scoreboard div {
+      flex: 1;
+      text-align: center;
+    }
+    .label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+    .value {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .status {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+      background: #181818;
+      min-height: 3.5em;
+      display: flex;
+      align-items: center;
+      font-size: 0.95rem;
+    }
+    .big-status {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .section-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: 0.7;
+      margin-top: 18px;
+      margin-bottom: 6px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 8px;
+      border-radius: 10px;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #444;
+      color: #f5f5f5;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.1s ease;
+    }
+    button:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+    button.primary {
+      background: #2563eb;
+    }
+    button.secondary {
+      background: #444;
+      font-size: 0.9rem;
+    }
+    button.danger {
+      background: #b91c1c;
+    }
+    button:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+    .footer {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      opacity: 0.7;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="game">
+    <h1>Shadow Boxing</h1>
+
+    <div class="scoreboard">
+      <div>
+        <div class="label">Player A streak</div>
+        <div class="value" id="streakA">0</div>
+      </div>
+      <div>
+        <div class="label">Player B streak</div>
+        <div class="value" id="streakB">0</div>
+      </div>
+    </div>
+
+    <div class="status">
+      <div>
+        <div class="big-status" id="statusTitle">Player A attacks first</div>
+        <div id="statusText">Player A: choose an attack direction. Then pass the device to Player B.</div>
+      </div>
+    </div>
+
+    <div id="attackerSection">
+      <div class="section-title" id="attackerLabel">Attacker choice</div>
+      <div class="buttons">
+        <button class="primary" onclick="chooseAttack('UP')">⬆️ Up</button>
+        <button class="primary" onclick="chooseAttack('DOWN')">⬇️ Down</button>
+        <button class="primary" onclick="chooseAttack('LEFT')">⬅️ Left</button>
+        <button class="primary" onclick="chooseAttack('RIGHT')">➡️ Right</button>
+      </div>
+    </div>
+
+    <div id="defenderSection" style="display:none;">
+      <div class="section-title" id="defenderLabel">Defender move</div>
+      <div class="buttons">
+        <button onclick="chooseDefense('UP')">⬆️ Up</button>
+        <button onclick="chooseDefense('DOWN')">⬇️ Down</button>
+        <button onclick="chooseDefense('LEFT')">⬅️ Left</button>
+        <button onclick="chooseDefense('RIGHT')">➡️ Right</button>
+      </div>
+    </div>
+
+    <div class="buttons" style="margin-top:8px;">
+      <button class="secondary" onclick="nextRound()" id="nextRoundBtn" disabled>Next round</button>
+      <button class="danger" onclick="resetGame()">Reset game</button>
+    </div>
+
+    <div class="footer">
+      Rules: Defender loses a round if they move in the same direction as the attack.
+      Lose 3 rounds in a row and you're out. If the defender dodges, they become the attacker.
+    </div>
+  </div>
+
+  <script>
+    let attacker = 'A';
+    let defender = 'B';
+    let streakA = 0;
+    let streakB = 0;
+    let currentAttack = null;
+    let roundResolved = false;
+
+    const streakAEl = document.getElementById('streakA');
+    const streakBEl = document.getElementById('streakB');
+    const statusTitleEl = document.getElementById('statusTitle');
+    const statusTextEl = document.getElementById('statusText');
+    const attackerSection = document.getElementById('attackerSection');
+    const defenderSection = document.getElementById('defenderSection');
+    const attackerLabel = document.getElementById('attackerLabel');
+    const defenderLabel = document.getElementById('defenderLabel');
+    const nextRoundBtn = document.getElementById('nextRoundBtn');
+
+    function updateScoreboard() {
+      streakAEl.textContent = streakA;
+      streakBEl.textContent = streakB;
+    }
+
+    function directionEmoji(dir) {
+      switch (dir) {
+        case 'UP': return '⬆️';
+        case 'DOWN': return '⬇️';
+        case 'LEFT': return '⬅️';
+        case 'RIGHT': return '➡️';
+        default: return '';
+      }
+    }
+
+    function chooseAttack(dir) {
+      if (roundResolved) return;
+      currentAttack = dir;
+      attackerSection.style.display = 'none';
+      defenderSection.style.display = 'block';
+
+      statusTitleEl.textContent = `Pass to Player ${defender}`;
+      statusTextEl.textContent = `Player ${defender}: choose your move. Don't peek at Player ${attacker}'s choice.`;
+    }
+
+    function chooseDefense(dir) {
+      if (!currentAttack || roundResolved) return;
+
+      const hit = (dir === currentAttack);
+      let loser = null;
+      let winner = null;
+
+      if (hit) {
+        loser = defender;
+        winner = attacker;
+
+        if (loser === 'A') {
+          streakA++;
+          streakB = 0;
+        } else {
+          streakB++;
+          streakA = 0;
+        }
+
+        updateScoreboard();
+
+        statusTitleEl.textContent = `Hit! Player ${loser} matched the attack.`;
+        statusTextEl.textContent =
+          `Attack: ${directionEmoji(currentAttack)}  •  Defense: ${directionEmoji(dir)}. ` +
+          `Player ${loser}'s streak is now ${loser === 'A' ? streakA : streakB}.`;
+
+        // Check for game over (3 losses in a row)
+        if (streakA >= 3 || streakB >= 3) {
+          statusTitleEl.textContent = `💥 Player ${loser} is out!`;
+          statusTextEl.textContent =
+            `Player ${loser} lost 3 rounds in a row. Player ${winner} wins the game.`;
+          roundResolved = true;
+          nextRoundBtn.disabled = true;
+          attackerSection.style.display = 'none';
+          defenderSection.style.display = 'none';
+          return;
+        }
+
+        // Same attacker continues if hit
+        roundResolved = true;
+        nextRoundBtn.disabled = false;
+
+      } else {
+        // Dodge: roles swap, streak of defender resets (already handled since no loss added)
+        statusTitleEl.textContent = `Dodge! Player ${defender} becomes the attacker.`;
+        statusTextEl.textContent =
+          `Attack: ${directionEmoji(currentAttack)}  •  Defense: ${directionEmoji(dir)}. ` +
+          `New attacker: Player ${defender}.`;
+
+        const oldAttacker = attacker;
+        attacker = defender;
+        defender = oldAttacker;
+
+        roundResolved = true;
+        nextRoundBtn.disabled = false;
+      }
+
+      defenderSection.style.display = 'none';
+    }
+
+    function nextRound() {
+      if (!roundResolved) return;
+      roundResolved = false;
+      currentAttack = null;
+      nextRoundBtn.disabled = true;
+
+      attackerSection.style.display = 'block';
+      defenderSection.style.display = 'none';
+
+      attackerLabel.textContent = `Player ${attacker} attack`;
+      defenderLabel.textContent = `Player ${defender} move`;
+
+      statusTitleEl.textContent = `Player ${attacker} attacks`;
+      statusTextEl.textContent =
+        `Player ${attacker}: choose an attack direction. Then pass the device to Player ${defender}.`;
+    }
+
+    function resetGame() {
+      attacker = 'A';
+      defender = 'B';
+      streakA = 0;
+      streakB = 0;
+      currentAttack = null;
+      roundResolved = false;
+      updateScoreboard();
+
+      attackerSection.style.display = 'block';
+      defenderSection.style.display = 'none';
+      nextRoundBtn.disabled = true;
+
+      attackerLabel.textContent = `Attacker choice`;
+      defenderLabel.textContent = `Defender move`;
+      statusTitleEl.textContent = `Player A attacks first`;
+      statusTextEl.textContent =
+        `Player A: choose an attack direction. Then pass the device to Player B.`;
+    }
+
+    // Initialize
+    updateScoreboard();
+    // Keyboard controls: use arrow keys for directions
+    document.addEventListener('keydown', (event) => {
+      const key = event.key;
+
+      let dir = null;
+      if (key === 'ArrowUp') dir = 'UP';
+      else if (key === 'ArrowDown') dir = 'DOWN';
+      else if (key === 'ArrowLeft') dir = 'LEFT';
+      else if (key === 'ArrowRight') dir = 'RIGHT';
+
+      if (!dir) return; // ignore non-arrow keys
+
+      // Avoid page scroll / default browser behavior
+      event.preventDefault();
+
+      // If the round is already resolved, ignore input
+      if (roundResolved) return;
+
+      const attackerVisible = attackerSection.style.display !== 'none';
+      const defenderVisible = defenderSection.style.display !== 'none';
+
+      // Attacker phase: no attack chosen yet, attacker UI visible
+      if (!currentAttack && attackerVisible) {
+        chooseAttack(dir);
+        return;
+      }
+
+      // Defender phase: attack already chosen, defender UI visible
+      if (currentAttack && defenderVisible) {
+        chooseDefense(dir);
+        return;
+      }
+    });
+
+    // Initialize
+    updateScoreboard();  
+</script>
+</body>
+</html>
