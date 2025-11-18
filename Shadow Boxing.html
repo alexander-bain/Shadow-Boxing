@@ -15,429 +15,948 @@
   </script>
 
   <style>
+    :root {
+      --bg: #050509;
+      --panel: #111522;
+      --panel-soft: #181d2b;
+      --accent: #4f8cff;
+      --accent-soft: rgba(79, 140, 255, 0.1);
+      --accent-strong: rgba(79, 140, 255, 0.35);
+      --danger: #ff4f6a;
+      --text-main: #f5f5f5;
+      --text-muted: #a3a7b7;
+      --border-subtle: #23283b;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.7);
+      --radius-lg: 18px;
+      --radius-pill: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin: 0;
       padding: 16px;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
-      background: #111;
-      color: #f5f5f5;
+      align-items: flex-start;
+      background: radial-gradient(circle at top, #1a2240 0, #050509 45%, #000 100%);
+      color: var(--text-main);
     }
-    .game {
-      max-width: 480px;
+
+    .app-shell {
       width: 100%;
-      background: #222;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      max-width: 900px;
+      background: linear-gradient(145deg, #0b0f1b, #050509);
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      padding: 20px 20px 24px;
+      border: 1px solid var(--border-subtle);
     }
-    h1 {
-      margin-top: 0;
-      text-align: center;
-      font-size: 1.7rem;
+
+    @media (min-width: 768px) {
+      .app-shell {
+        padding: 24px 28px 28px;
+      }
     }
-    .names {
+
+    .header {
       display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-      font-size: 0.85rem;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
     }
-    .name-field {
-      flex: 1;
+
+    .title-group {
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
-    .name-field label {
-      opacity: 0.75;
+
+    h1 {
+      font-size: 24px;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
-      font-size: 0.75rem;
-    }
-    .name-field input {
-      padding: 4px 6px;
-      border-radius: 6px;
-      border: 1px solid #444;
-      background: #111;
-      color: #f5f5f5;
-      font-size: 0.9rem;
-    }
-    .scoreboard {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      padding: 10px;
-      border-radius: 10px;
-      background: #333;
-      font-size: 0.95rem;
-    }
-    .scoreboard div {
-      flex: 1;
-      text-align: center;
-    }
-    .label {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      opacity: 0.7;
-    }
-    .value {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-    .status {
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 10px;
-      background: #181818;
-      min-height: 3.5em;
+      margin: 0;
       display: flex;
       align-items: center;
-      font-size: 0.95rem;
+      gap: 8px;
     }
-    .big-status {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .section-title {
-      font-size: 0.9rem;
+
+    .title-badge {
+      font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      opacity: 0.7;
-      margin-top: 18px;
-      margin-bottom: 6px;
+      letter-spacing: 0.12em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--accent-strong);
+      background: var(--accent-soft);
+      color: var(--accent);
     }
-    .buttons {
+
+    .subtitle {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .mode-toggle {
+      display: flex;
+      gap: 8px;
+      background: #05060b;
+      padding: 4px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .mode-button {
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .mode-button span.icon {
+      font-size: 16px;
+    }
+
+    .mode-button--active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-strong);
+    }
+
+    .main-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 720px) {
+      .main-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .panel {
+      background: radial-gradient(circle at top left, rgba(79, 140, 255, 0.2), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(255, 79, 154, 0.18), transparent 50%),
+                  var(--panel);
+      border-radius: var(--radius-lg);
+      padding: 14px 14px 16px;
+      border: 1px solid var(--border-subtle);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top center, rgba(255, 255, 255, 0.08), transparent 60%);
+      opacity: 0.2;
+      pointer-events: none;
+    }
+
+    .panel-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       gap: 8px;
       margin-bottom: 10px;
     }
-    button {
-      padding: 10px 8px;
+
+    .panel-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: var(--text-muted);
+    }
+
+    .field-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .field {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    .text-input,
+    .select-input {
+      width: 100%;
+      padding: 6px 10px;
       border-radius: 10px;
-      border: none;
-      font-size: 1rem;
+      border: 1px solid #24273b;
+      background: rgba(4, 7, 20, 0.9);
+      color: var(--text-main);
+      font-size: 13px;
+      outline: none;
+    }
+
+    .text-input:focus,
+    .select-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-strong);
+    }
+
+    .text-input[disabled] {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .round-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .round-info strong {
+      color: var(--text-main);
+    }
+
+    .primary-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .btn {
+      border-radius: var(--radius-pill);
+      border: 1px solid transparent;
+      padding: 6px 14px;
+      font-size: 13px;
       cursor: pointer;
-      background: #444;
-      color: #f5f5f5;
-      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.1s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      color: var(--text-main);
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease, border 0.08s ease;
     }
-    button:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #9f6bff);
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 22px rgba(79, 140, 255, 0.35);
     }
-    button.primary {
-      background: #2563eb;
+
+    .btn-secondary {
+      background: rgba(14, 17, 32, 0.9);
+      border-color: #24273b;
+      color: var(--text-muted);
     }
-    button.secondary {
-      background: #444;
-      font-size: 0.9rem;
+
+    .btn-ghost {
+      border-color: #25293b;
+      background: rgba(10, 10, 18, 0.6);
+      color: var(--text-muted);
     }
-    button.danger {
-      background: #b91c1c;
+
+    .btn:active {
+      transform: scale(0.97) translateY(1px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
     }
-    button:disabled {
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .status-text {
+      min-height: 18px;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .status-text strong {
+      color: var(--accent);
+    }
+
+    .last-result {
+      font-size: 13px;
+      margin-bottom: 8px;
+      min-height: 18px;
+    }
+
+    .last-result.hit {
+      color: #9cffb8;
+    }
+
+    .last-result.miss {
+      color: var(--danger);
+    }
+
+    .moves-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 70px);
+      grid-template-rows: repeat(3, 44px);
+      gap: 6px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .moves-grid .spacer {
+      pointer-events: none;
+    }
+
+    .move-button {
+      border-radius: 12px;
+      border: 1px solid #25293b;
+      background: rgba(8, 10, 22, 0.9);
+      color: var(--text-main);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.6);
+      transform: translateY(0);
+      transition: transform 0.08s ease, box-shadow 0.08s ease, border 0.08s ease, background 0.1s ease;
+    }
+
+    .move-button span.dir {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .move-button span.icon {
+      font-size: 18px;
+    }
+
+    .move-button:hover:not(:disabled) {
+      border-color: var(--accent);
+    }
+
+    .move-button:active:not(:disabled) {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.7);
+    }
+
+    .move-button:disabled {
       opacity: 0.4;
-      cursor: default;
+      cursor: not-allowed;
+      box-shadow: none;
     }
-    .footer {
-      margin-top: 12px;
-      font-size: 0.8rem;
-      opacity: 0.7;
-      text-align: center;
+
+    .move-button.selected {
+      background: rgba(79, 140, 255, 0.2);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-strong);
+    }
+
+    .scoreboard {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .score-card {
+      background: var(--panel-soft);
+      border-radius: 14px;
+      padding: 10px 10px 10px;
+      border: 1px solid #24273b;
+      position: relative;
+    }
+
+    .score-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    .score-name {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .score-value {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+
+    .score-pill {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding: 3px 8px 2px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(0, 0, 0, 0.2);
+      color: var(--text-muted);
+    }
+
+    .score-pill.leader {
+      border-color: rgba(156, 255, 184, 0.5);
+      background: rgba(40, 111, 73, 0.3);
+      color: #c3ffd7;
+    }
+
+    .round-summary {
+      background: rgba(4, 7, 16, 0.9);
+      border-radius: 12px;
+      padding: 8px 10px;
+      border: 1px dashed #2d3147;
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-bottom: 4px;
+    }
+
+    .round-summary span.highlight {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .mini-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .mini-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 0;
+    }
+
+    .footer-note {
+      margin-top: 6px;
+      font-size: 11px;
+      color: #5d6377;
+      text-align: right;
     }
   </style>
 </head>
 <body>
-  <div class="game">
-    <h1>Shadow Boxing</h1>
+  <div class="app-shell">
+    <header class="header">
+      <div class="title-group">
+        <h1>
+          Shadow Boxing
+          <span class="title-badge">Dex Edition</span>
+        </h1>
+        <p class="subtitle">Match directions, rack up points, and try to out-think your opponent&nbsp;— or the computer.</p>
+      </div>
 
-    <!-- Custom player names -->
-    <div class="names">
-      <div class="name-field">
-        <label for="playerANameInput">Player A name</label>
-        <input id="playerANameInput" type="text" value="Player A" />
+      <div class="mode-toggle" aria-label="Game mode">
+        <button id="mode-human" class="mode-button mode-button--active" type="button">
+          <span class="icon">👥</span>
+          <span>2 Players</span>
+        </button>
+        <button id="mode-computer" class="mode-button" type="button">
+          <span class="icon">🤖</span>
+          <span>Vs Computer</span>
+        </button>
       </div>
-      <div class="name-field">
-        <label for="playerBNameInput">Player B name</label>
-        <input id="playerBNameInput" type="text" value="Player B" />
-      </div>
-    </div>
+    </header>
 
-    <div class="scoreboard">
-      <div>
-        <div class="label"><span id="labelAName">Player A</span> streak</div>
-        <div class="value" id="streakA">0</div>
-      </div>
-      <div>
-        <div class="label"><span id="labelBName">Player B</span> streak</div>
-        <div class="value" id="streakB">0</div>
-      </div>
-    </div>
+    <div class="main-grid">
+      <!-- LEFT SIDE: Game controls & board -->
+      <section class="panel">
+        <div class="panel-inner">
+          <div class="panel-header">
+            <div class="panel-title">Setup</div>
+          </div>
 
-    <div class="status">
-      <div>
-        <div class="big-status" id="statusTitle">Player A attacks first</div>
-        <div id="statusText">
-          Player A: choose an attack direction. Then pass the device to Player B.
+          <div class="field-row">
+            <div class="field">
+              <label for="player1-name">Player 1</label>
+              <input id="player1-name" class="text-input" type="text" value="Dex" />
+            </div>
+            <div class="field">
+              <label for="player2-name">Player 2 / Computer</label>
+              <input id="player2-name" class="text-input" type="text" value="Player 2" />
+            </div>
+          </div>
+
+          <div class="controls-row">
+            <div class="round-info">
+              <span>Round <strong id="round-number">1</strong> of <strong id="round-total">10</strong></span>
+              <span id="turn-indicator">It's Player 1's turn.</span>
+            </div>
+
+            <div class="primary-actions">
+              <select id="round-select" class="select-input">
+                <option value="5">Best of 5</option>
+                <option value="10" selected>Best of 10</option>
+                <option value="15">Best of 15</option>
+                <option value="20">Best of 20</option>
+              </select>
+              <button id="new-match-btn" class="btn btn-primary" type="button">
+                <span>New Match</span>
+              </button>
+              <button id="reset-btn" class="btn btn-ghost" type="button">
+                <span>Reset Scores</span>
+              </button>
+            </div>
+          </div>
+
+          <p id="status" class="status-text">2-player mode</p>
+          <p id="last-result" class="last-result"></p>
+
+          <div class="moves-grid" aria-label="Direction controls">
+            <div class="spacer"></div>
+            <button class="move-button" data-direction="up" type="button">
+              <span class="icon">⬆️</span>
+              <span class="dir">Up</span>
+            </button>
+            <div class="spacer"></div>
+
+            <button class="move-button" data-direction="left" type="button">
+              <span class="icon">⬅️</span>
+              <span class="dir">Left</span>
+            </button>
+            <div class="spacer"></div>
+            <button class="move-button" data-direction="right" type="button">
+              <span class="icon">➡️</span>
+              <span class="dir">Right</span>
+            </button>
+
+            <div class="spacer"></div>
+            <button class="move-button" data-direction="down" type="button">
+              <span class="icon">⬇️</span>
+              <span class="dir">Down</span>
+            </button>
+            <div class="spacer"></div>
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
 
-    <div id="attackerSection">
-      <div class="section-title" id="attackerLabel">Attacker choice</div>
-      <div class="buttons">
-        <button class="primary" onclick="chooseAttack('UP')">⬆️ Up</button>
-        <button class="primary" onclick="chooseAttack('DOWN')">⬇️ Down</button>
-        <button class="primary" onclick="chooseAttack('LEFT')">⬅️ Left</button>
-        <button class="primary" onclick="chooseAttack('RIGHT')">➡️ Right</button>
-      </div>
-    </div>
+      <!-- RIGHT SIDE: scoreboard & summary -->
+      <section class="panel">
+        <div class="panel-inner">
+          <div class="panel-header">
+            <div class="panel-title">Scoreboard</div>
+          </div>
 
-    <div id="defenderSection" style="display:none;">
-      <div class="section-title" id="defenderLabel">Defender move</div>
-      <div class="buttons">
-        <button onclick="chooseDefense('UP')">⬆️ Up</button>
-        <button onclick="chooseDefense('DOWN')">⬇️ Down</button>
-        <button onclick="chooseDefense('LEFT')">⬅️ Left</button>
-        <button onclick="chooseDefense('RIGHT')">➡️ Right</button>
-      </div>
-    </div>
+          <div class="scoreboard">
+            <div class="score-card" id="p1-card">
+              <div class="score-label">Player 1</div>
+              <div class="score-name" id="p1-name-label">Dex</div>
+              <div class="score-value" id="p1-score">0</div>
+              <div class="score-pill" id="p1-pill">Tied</div>
+            </div>
+            <div class="score-card" id="p2-card">
+              <div class="score-label">Player 2</div>
+              <div class="score-name" id="p2-name-label">Player 2</div>
+              <div class="score-value" id="p2-score">0</div>
+              <div class="score-pill" id="p2-pill">Tied</div>
+            </div>
+          </div>
 
-    <div class="buttons" style="margin-top:8px;">
-      <button class="secondary" onclick="nextRound()" id="nextRoundBtn" disabled>Next round</button>
-      <button class="danger" onclick="resetGame()">Reset game</button>
-    </div>
+          <div class="round-summary">
+            <span>Match mode: <span class="highlight" id="summary-mode">2 players</span></span>
+            <span>Target rounds: <span class="highlight" id="summary-rounds">10</span></span>
+            <span>First to: <span class="highlight" id="summary-first-to">6</span> points wins.</span>
+          </div>
 
-    <div class="footer">
-      Rules: Defender loses a round if they move in the same direction as the attack.
-      Lose 3 rounds in a row and you're out. If the defender dodges, they become the attacker.
+          <div>
+            <div class="mini-label">How scoring works</div>
+            <p class="mini-text">
+              Each round, <span class="highlight">Player 1</span> chooses a direction first.
+              In 2-player mode, Player 2 chooses next. In Vs Computer mode, the computer “thinks”
+              for a moment and then picks a random direction.
+            </p>
+            <p class="mini-text">
+              If both choose the <span class="highlight">same direction</span>, Player 1 scores.
+              If they choose <span class="highlight">different directions</span>, Player 2 (or the computer) scores.
+            </p>
+          </div>
+
+          <div class="footer-note">
+            Tip: In Vs Computer mode, watch the “thinking…” delay. The machine is faking it. 😉
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 
   <script>
-    // Game state
-    let attacker = 'A';
-    let defender = 'B';
-    let streakA = 0;
-    let streakB = 0;
-    let currentAttack = null;
-    let roundResolved = false;
+    // --- State ---
+    let vsComputer = false;           // false = 2 players, true = vs computer
+    let isComputerThinking = false;   // prevent double input while computer "thinks"
+    const moves = ["left", "right", "up", "down"];
 
-    // Player names
-    let playerAName = 'Player A';
-    let playerBName = 'Player B';
+    let totalRounds = 10;
+    let currentRound = 1;
+    let p1Score = 0;
+    let p2Score = 0;
+    let p1Move = null;
+    let p2Move = null;
 
-    // DOM references
-    const streakAEl = document.getElementById('streakA');
-    const streakBEl = document.getElementById('streakB');
-    const statusTitleEl = document.getElementById('statusTitle');
-    const statusTextEl = document.getElementById('statusText');
-    const attackerSection = document.getElementById('attackerSection');
-    const defenderSection = document.getElementById('defenderSection');
-    const attackerLabel = document.getElementById('attackerLabel');
-    const defenderLabel = document.getElementById('defenderLabel');
-    const nextRoundBtn = document.getElementById('nextRoundBtn');
+    // --- Elements ---
+    const modeHumanBtn = document.getElementById("mode-human");
+    const modeComputerBtn = document.getElementById("mode-computer");
 
-    const playerANameInput = document.getElementById('playerANameInput');
-    const playerBNameInput = document.getElementById('playerBNameInput');
-    const labelANameEl = document.getElementById('labelAName');
-    const labelBNameEl = document.getElementById('labelBName');
+    const player1NameInput = document.getElementById("player1-name");
+    const player2NameInput = document.getElementById("player2-name");
 
-    function getPlayerName(code) {
-      return code === 'A' ? playerAName : playerBName;
+    const p1NameLabel = document.getElementById("p1-name-label");
+    const p2NameLabel = document.getElementById("p2-name-label");
+
+    const roundNumberEl = document.getElementById("round-number");
+    const roundTotalEl = document.getElementById("round-total");
+    const roundSelect = document.getElementById("round-select");
+
+    const turnIndicatorEl = document.getElementById("turn-indicator");
+    const statusEl = document.getElementById("status");
+    const lastResultEl = document.getElementById("last-result");
+
+    const p1ScoreEl = document.getElementById("p1-score");
+    const p2ScoreEl = document.getElementById("p2-score");
+    const p1CardEl = document.getElementById("p1-card");
+    const p2CardEl = document.getElementById("p2-card");
+    const p1PillEl = document.getElementById("p1-pill");
+    const p2PillEl = document.getElementById("p2-pill");
+
+    const summaryModeEl = document.getElementById("summary-mode");
+    const summaryRoundsEl = document.getElementById("summary-rounds");
+    const summaryFirstToEl = document.getElementById("summary-first-to");
+
+    const newMatchBtn = document.getElementById("new-match-btn");
+    const resetBtn = document.getElementById("reset-btn");
+    const moveButtons = Array.from(document.querySelectorAll(".move-button"));
+
+    // --- Helpers ---
+    function getPlayer1Name() {
+      return player1NameInput.value.trim() || "Player 1";
+    }
+
+    function getPlayer2Name() {
+      return player2NameInput.value.trim() || (vsComputer ? "Computer" : "Player 2");
+    }
+
+    function updateNameLabels() {
+      p1NameLabel.textContent = getPlayer1Name();
+      p2NameLabel.textContent = getPlayer2Name();
+    }
+
+    function updateRoundSummary() {
+      summaryModeEl.textContent = vsComputer ? "You vs Computer" : "2 players";
+      summaryRoundsEl.textContent = totalRounds;
+      const firstTo = Math.floor(totalRounds / 2) + 1;
+      summaryFirstToEl.textContent = firstTo;
     }
 
     function updateScoreboard() {
-      streakAEl.textContent = streakA;
-      streakBEl.textContent = streakB;
-    }
+      p1ScoreEl.textContent = p1Score;
+      p2ScoreEl.textContent = p2Score;
 
-    function applyNames() {
-      const a = playerANameInput.value.trim() || 'Player A';
-      const b = playerBNameInput.value.trim() || 'Player B';
-      playerAName = a;
-      playerBName = b;
-      labelANameEl.textContent = a;
-      labelBNameEl.textContent = b;
-
-      // Update current status line to use names
-      if (!roundResolved && !currentAttack) {
-        // Beginning of a round: attacker choosing
-        statusTitleEl.textContent = `${getPlayerName(attacker)} attacks`;
-        statusTextEl.textContent =
-          `${getPlayerName(attacker)}: choose an attack direction. Then pass the device to ${getPlayerName(defender)}.`;
+      // Leader / tied labeling
+      let p1Leader = false;
+      let p2Leader = false;
+      if (p1Score > p2Score) {
+        p1Leader = true;
+      } else if (p2Score > p1Score) {
+        p2Leader = true;
       }
+
+      p1PillEl.textContent = p1Leader ? "Leader" : (p2Leader ? "Behind" : "Tied");
+      p2PillEl.textContent = p2Leader ? "Leader" : (p1Leader ? "Behind" : "Tied");
+
+      p1PillEl.classList.toggle("leader", p1Leader);
+      p2PillEl.classList.toggle("leader", p2Leader);
     }
 
-    // Apply names whenever inputs change (on blur + Enter)
-    playerANameInput.addEventListener('change', applyNames);
-    playerBNameInput.addEventListener('change', applyNames);
-    playerANameInput.addEventListener('blur', applyNames);
-    playerBNameInput.addEventListener('blur', applyNames);
-
-    function directionEmoji(dir) {
-      switch (dir) {
-        case 'UP': return '⬆️';
-        case 'DOWN': return '⬇️';
-        case 'LEFT': return '⬅️';
-        case 'RIGHT': return '➡️';
-        default: return '';
-      }
+    function resetMovesUI() {
+      moveButtons.forEach(btn => btn.classList.remove("selected"));
     }
 
-    function chooseAttack(dir) {
-      if (roundResolved) return;
-      currentAttack = dir;
-      attackerSection.style.display = 'none';
-      defenderSection.style.display = 'block';
-
-      statusTitleEl.textContent = `Pass to ${getPlayerName(defender)}`;
-      statusTextEl.textContent =
-        `${getPlayerName(defender)}: choose your move. Don't peek at ${getPlayerName(attacker)}'s choice.`;
+    function setButtonsDisabled(disabled) {
+      moveButtons.forEach(btn => {
+        btn.disabled = disabled;
+      });
     }
 
-    function chooseDefense(dir) {
-      if (!currentAttack || roundResolved) return;
-
-      const hit = (dir === currentAttack);
-      let loser = null;
-      let winner = null;
-
-      if (hit) {
-        loser = defender;
-        winner = attacker;
-
-        if (loser === 'A') {
-          streakA++;
-          streakB = 0;
-        } else {
-          streakB++;
-          streakA = 0;
-        }
-
-        updateScoreboard();
-
-        statusTitleEl.textContent = `Hit! ${getPlayerName(loser)} matched the attack.`;
-        statusTextEl.textContent =
-          `Attack: ${directionEmoji(currentAttack)}  •  Defense: ${directionEmoji(dir)}. ` +
-          `${getPlayerName(loser)}'s streak is now ${loser === 'A' ? streakA : streakB}.`;
-
-        // Check for game over (3 losses in a row)
-        if (streakA >= 3 || streakB >= 3) {
-          statusTitleEl.textContent = `💥 ${getPlayerName(loser)} is out!`;
-          statusTextEl.textContent =
-            `${getPlayerName(loser)} lost 3 rounds in a row. ${getPlayerName(winner)} wins the game.`;
-          roundResolved = true;
-          nextRoundBtn.disabled = true;
-          attackerSection.style.display = 'none';
-          defenderSection.style.display = 'none';
-          return;
-        }
-
-        // Same attacker continues if hit
-        roundResolved = true;
-        nextRoundBtn.disabled = false;
-
+    function setTurnIndicatorForNewRound() {
+      const p1Name = getPlayer1Name();
+      const p2Name = getPlayer2Name();
+      if (vsComputer) {
+        turnIndicatorEl.textContent = `Round ${currentRound}: ${p1Name} picks first, then the computer thinks.`;
       } else {
-        // Dodge: roles swap
-        statusTitleEl.textContent = `Dodge! ${getPlayerName(defender)} becomes the attacker.`;
-        statusTextEl.textContent =
-          `Attack: ${directionEmoji(currentAttack)}  •  Defense: ${directionEmoji(dir)}. ` +
-          `New attacker: ${getPlayerName(defender)}.`;
+        turnIndicatorEl.textContent = `Round ${currentRound}: ${p1Name} picks first, then ${p2Name}.`;
+      }
+    }
 
-        const oldAttacker = attacker;
-        attacker = defender;
-        defender = oldAttacker;
+    function startNewMatch() {
+      p1Score = 0;
+      p2Score = 0;
+      currentRound = 1;
+      p1Move = null;
+      p2Move = null;
+      lastResultEl.textContent = "";
+      lastResultEl.className = "last-result";
+      statusEl.textContent = vsComputer ? "You vs the computer" : "2-player mode";
+      updateScoreboard();
+      roundNumberEl.textContent = currentRound;
+      roundTotalEl.textContent = totalRounds;
+      resetMovesUI();
+      setButtonsDisabled(false);
+      setTurnIndicatorForNewRound();
+    }
 
-        roundResolved = true;
-        nextRoundBtn.disabled = false;
+    function resetScoresOnly() {
+      p1Score = 0;
+      p2Score = 0;
+      updateScoreboard();
+      lastResultEl.textContent = "";
+      lastResultEl.className = "last-result";
+    }
+
+    function endMatchIfFinished() {
+      const firstTo = Math.floor(totalRounds / 2) + 1;
+      const p1Name = getPlayer1Name();
+      const p2Name = getPlayer2Name();
+
+      if (p1Score >= firstTo || p2Score >= firstTo || currentRound > totalRounds) {
+        setButtonsDisabled(true);
+
+        if (p1Score > p2Score) {
+          statusEl.textContent = `${p1Name} wins the match, ${p1Score}–${p2Score}!`;
+        } else if (p2Score > p1Score) {
+          statusEl.textContent = `${p2Name} wins the match, ${p2Score}–${p1Score}!`;
+        } else {
+          statusEl.textContent = `Match ends in a tie, ${p1Score}–${p2Score}.`;
+        }
+
+        turnIndicatorEl.textContent = "Match over. Start a new match to play again.";
+        return true;
       }
 
-      defenderSection.style.display = 'none';
+      return false;
     }
 
-    function nextRound() {
-      if (!roundResolved) return;
-      roundResolved = false;
-      currentAttack = null;
-      nextRoundBtn.disabled = true;
+    function resolveRound() {
+      if (!p1Move || !p2Move) return;
 
-      attackerSection.style.display = 'block';
-      defenderSection.style.display = 'none';
+      const p1Name = getPlayer1Name();
+      const p2Name = getPlayer2Name();
 
-      attackerLabel.textContent = `${getPlayerName(attacker)} attack`;
-      defenderLabel.textContent = `${getPlayerName(defender)} move`;
+      // Scoring rule:
+      //  - Same direction: Player 1 scores
+      //  - Different directions: Player 2 / Computer scores
+      let text = "";
+      if (p1Move === p2Move) {
+        p1Score += 1;
+        lastResultEl.className = "last-result hit";
+        text = `${p1Name} scores! Both chose ${p1Move.toUpperCase()}.`;
+      } else {
+        p2Score += 1;
+        lastResultEl.className = "last-result miss";
+        text = `${p2Name} scores! ${p1Name} chose ${p1Move.toUpperCase()}, ${p2Name} chose ${p2Move.toUpperCase()}.`;
+      }
 
-      statusTitleEl.textContent = `${getPlayerName(attacker)} attacks`;
-      statusTextEl.textContent =
-        `${getPlayerName(attacker)}: choose an attack direction. Then pass the device to ${getPlayerName(defender)}.`;
-    }
-
-    function resetGame() {
-      attacker = 'A';
-      defender = 'B';
-      streakA = 0;
-      streakB = 0;
-      currentAttack = null;
-      roundResolved = false;
+      lastResultEl.textContent = text;
       updateScoreboard();
 
-      attackerSection.style.display = 'block';
-      defenderSection.style.display = 'none';
-      nextRoundBtn.disabled = true;
+      // Prepare next round
+      currentRound += 1;
+      p1Move = null;
+      p2Move = null;
+      resetMovesUI();
 
-      applyNames(); // reapply labels + initial status with current names
-      attackerLabel.textContent = 'Attacker choice';
-      defenderLabel.textContent = 'Defender move';
-
-      statusTitleEl.textContent = `${playerAName} attacks first`;
-      statusTextEl.textContent =
-        `${playerAName}: choose an attack direction. Then pass the device to ${playerBName}.`;
+      if (!endMatchIfFinished()) {
+        roundNumberEl.textContent = currentRound;
+        setTurnIndicatorForNewRound();
+      }
     }
 
-    // Keyboard controls: use arrow keys for directions
-    document.addEventListener('keydown', (event) => {
-      const key = event.key;
+    function getRandomComputerMove() {
+      const index = Math.floor(Math.random() * moves.length);
+      return moves[index];
+    }
 
-      let dir = null;
-      if (key === 'ArrowUp') dir = 'UP';
-      else if (key === 'ArrowDown') dir = 'DOWN';
-      else if (key === 'ArrowLeft') dir = 'LEFT';
-      else if (key === 'ArrowRight') dir = 'RIGHT';
+    function handlePlayerMove(direction) {
+      if (isComputerThinking) return;
 
-      if (!dir) return; // ignore non-arrow keys
+      const p1Name = getPlayer1Name();
+      const p2Name = getPlayer2Name();
 
-      // Avoid page scroll / default browser behavior
-      event.preventDefault();
+      // If no move yet, this is Player 1's move
+      if (!p1Move) {
+        p1Move = direction;
+        statusEl.textContent = vsComputer
+          ? `${p1Name} picked ${direction.toUpperCase()}. Computer is thinking…`
+          : `${p1Name} picked ${direction.toUpperCase()}. Waiting for ${p2Name}.`;
 
-      // If the round is already resolved, ignore input
-      if (roundResolved) return;
+        resetMovesUI();
+        // Highlight P1 choice
+        moveButtons
+          .filter(btn => btn.dataset.direction === direction)
+          .forEach(btn => btn.classList.add("selected"));
 
-      const attackerVisible = attackerSection.style.display !== 'none';
-      const defenderVisible = defenderSection.style.display !== 'none';
+        if (vsComputer) {
+          // Fake "thinking" delay 1–2 seconds
+          isComputerThinking = true;
+          setButtonsDisabled(true);
 
-      // Attacker phase: no attack chosen yet, attacker UI visible
-      if (!currentAttack && attackerVisible) {
-        chooseAttack(dir);
+          const delay = 1000 + Math.random() * 1000; // 1000–2000 ms
+          setTimeout(() => {
+            const computerDirection = getRandomComputerMove();
+            p2Move = computerDirection;
+            isComputerThinking = false;
+            setButtonsDisabled(false);
+
+            statusEl.textContent = `Computer chose ${computerDirection.toUpperCase()}.`;
+            resolveRound();
+          }, delay);
+        } else {
+          // 2-player mode: wait for P2
+          turnIndicatorEl.textContent = `Round ${currentRound}: ${p2Name} picks now.`;
+        }
+
         return;
       }
 
-      // Defender phase: attack already chosen, defender UI visible
-      if (currentAttack && defenderVisible) {
-        chooseDefense(dir);
+      // If we already have P1's move and we are in 2-player mode, this is P2's move
+      if (!vsComputer && !p2Move) {
+        p2Move = direction;
+        statusEl.textContent = `${p2Name} picked ${direction.toUpperCase()}. Resolving round…`;
+        resolveRound();
         return;
+      }
+
+      // If we get here, both moves are filled or we're in a weird state — ignore.
+    }
+
+    // --- Event wiring ---
+    modeHumanBtn.addEventListener("click", () => {
+      if (!vsComputer) return;
+      vsComputer = false;
+      modeHumanBtn.classList.add("mode-button--active");
+      modeComputerBtn.classList.remove("mode-button--active");
+      player2NameInput.disabled = false;
+
+      statusEl.textContent = "2-player mode";
+      summaryModeEl.textContent = "2 players";
+
+      // Reset match state (keep scores? we'll reset for predictability)
+      startNewMatch();
+      updateNameLabels();
+    });
+
+    modeComputerBtn.addEventListener("click", () => {
+      if (vsComputer) return;
+      vsComputer = true;
+      modeComputerBtn.classList.add("mode-button--active");
+      modeHumanBtn.classList.remove("mode-button--active");
+
+      // Lock player 2 name to "Computer" by default
+      player2NameInput.value = "Computer";
+      player2NameInput.disabled = true;
+
+      statusEl.textContent = "You vs the computer";
+      summaryModeEl.textContent = "You vs Computer";
+
+      startNewMatch();
+      updateNameLabels();
+    });
+
+    player1NameInput.addEventListener("input", () => {
+      updateNameLabels();
+    });
+
+    player2NameInput.addEventListener("input", () => {
+      if (!vsComputer) {
+        updateNameLabels();
       }
     });
 
-    // Initial setup
-    updateScoreboard();
-    applyNames();
-    statusTitleEl.textContent = `${playerAName} attacks first`;
-    statusTextEl.textContent =
-      `${playerAName}: choose an attack direction. Then pass the device to ${playerBName}.`;
+    roundSelect.addEventListener("change", () => {
+      totalRounds = parseInt(roundSelect.value, 10) || 10;
+      roundTotalEl.textContent = totalRounds;
+      updateRoundSummary();
+      startNewMatch();
+    });
+
+    newMatchBtn.addEventListener("click", () => {
+      startNewMatch();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      resetScoresOnly();
+    });
+
+    moveButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const direction = btn.dataset.direction;
+        if (!direction) return;
+        handlePlayerMove(direction);
+      });
+    });
+
+    // --- Initial setup ---
+    (function init() {
+      totalRounds = parseInt(roundSelect.value, 10) || 10;
+      roundTotalEl.textContent = totalRounds;
+      updateNameLabels();
+      updateRoundSummary();
+      updateScoreboard();
+      setTurnIndicatorForNewRound();
+      statusEl.textContent = "2-player mode";
+    })();
   </script>
 </body>
 </html>
