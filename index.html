@@ -5,6 +5,29 @@
   <title>Shadow Boxing Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <!-- Favicons & App Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/icons/icon-64.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon-180.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/icons/icon-512.png">
+
+  <!-- Open Graph / iMessage / Social preview -->
+  <meta property="og:title" content="Shadow Boxing — Dex Edition">
+  <meta property="og:description" content="Pick directions, fake out your opponent, and be the first to hit the streak you chose.">
+  <meta property="og:url" content="https://dexterbain.com">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://dexterbain.com/assets/icons/og-shadow-boxing-1200x630.png">
+
+  <!-- Twitter / X card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Shadow Boxing — Dex Edition">
+  <meta name="twitter:description" content="Pick directions, fake out your opponent, and be the first to hit the streak you chose.">
+  <meta name="twitter:image" content="https://dexterbain.com/assets/icons/og-shadow-boxing-1200x630.png">
+
+  <!-- iOS “Add to Home Screen” title -->
+  <meta name="apple-mobile-web-app-title" content="Shadow Boxing">
+
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3THX5NYY2B"></script>
   <script>
@@ -875,7 +898,7 @@
         // --- VS COMPUTER MODE ---
         if (shooter === 1) {
           // Human is shooter: human picks first, computer defends
-          if (p1Move !== null) return; // already chosen, wait
+          if (p1Move !== null) return;
           p1Move = direction;
           resetMovesUI();
           moveButtons
@@ -898,7 +921,6 @@
         } else {
           // Computer is shooter: computer has already picked, now human defends
           if (p2Move === null) {
-            // Safety: if for some reason computer didn't pick yet, do it now.
             p2Move = getRandomComputerMove();
           }
           if (p1Move !== null) return;
@@ -922,15 +944,12 @@
         } else {
           p2Move = direction;
         }
-        resetMovesUI();
-        moveButtons
-          .filter(btn => btn.dataset.direction === direction)
-          .forEach(btn => btn.classList.add("selected"));
 
         const shooterName = shooter === 1 ? p1Name : p2Name;
         const defenderName = shooter === 1 ? p2Name : p1Name;
-        statusEl.textContent = `${shooterName} picked ${direction.toUpperCase()}. ${defenderName} picks now.`;
+        statusEl.textContent = `${shooterName} picked. ${defenderName} picks now.`;
         turnIndicatorEl.textContent = `Round ${currentRound}: ${defenderName} to respond.`;
+        // ✅ No highlighting here in 2-player mode so Player B doesn't see the exact direction.
         return;
       }
 
@@ -943,7 +962,6 @@
         return; // weird state, ignore
       }
 
-      resetMovesUI();
       statusEl.textContent = `Resolving round…`;
       resolveRound();
     }
