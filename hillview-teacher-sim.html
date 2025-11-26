@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hillview Middle School Teacher Simulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Be a Hillview Middle School teacher for a year. Balance student learning and likability in this choice-based simulator." />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3THX5NYY2B"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-3THX5NYY2B');
+  </script>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #020617;
+      --card-bg: #020617;
+      --card-border: rgba(148, 163, 184, 0.5);
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.18);
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --danger: #f97373;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #1e293b 0, transparent 55%),
+        radial-gradient(circle at top right, #111827 0, transparent 60%),
+        var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .app {
+      max-width: 960px;
+      width: 100%;
+      background: rgba(2, 6, 23, 0.98);
+      border-radius: 24px;
+      padding: 20px 18px 18px;
+      box-shadow:
+        0 22px 45px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(148, 163, 184, 0.22);
+      backdrop-filter: blur(18px);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .title-group h1 {
+      margin: 0;
+      font-size: 1.6rem;
+    }
+
+    .title-group p {
+      margin: 3px 0 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      border-radius: 999px;
+      padding: 4px 10px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.15fr);
+      gap: 16px;
+    }
+
+    .panel {
+      background: var(--card-bg);
+      border-radius: 18px;
+      border: 1px solid var(--card-border);
+      padding: 13px 13px 12px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .panel-title {
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .panel-subtitle {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* Start screen */
+    .start-screen {
+      display: flex;
+      gap: 16px;
+      flex-direction: column;
+    }
+
+    .start-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    label {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    select,
+    input[type="number"] {
+      background: #020617;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 6px 10px;
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    select:focus,
+    input[type="number"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.6);
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: none;
+      padding: 8px 16px;
+      font-weight: 600;
+      font-size: 0.87rem;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), #16a34a);
+      color: #01110a;
+      box-shadow: 0 14px 26px rgba(34, 197, 94, 0.45);
+      transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 34px rgba(34, 197, 94, 0.55);
+    }
+
+    .primary-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 10px 18px rgba(34, 197, 94, 0.4);
+    }
+
+    .primary-btn[disabled] {
+      opacity: 0.5;
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .muted-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 5px 10px;
+      font-size: 0.78rem;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    /* Scenario panel */
+    .scenario-body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .scenario-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .pill-soft {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .scenario-text {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      padding: 10px 10px 8px;
+      border-radius: 14px;
+      background: radial-gradient(circle at top left, #0b1120, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .options {
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.92);
+      padding: 7px 9px;
+      font-size: 0.87rem;
+      color: #e5e7eb;
+      cursor: pointer;
+      transition: background 0.09s ease-out, transform 0.05s ease-out, box-shadow 0.09s ease-out, border-color 0.09s ease-out;
+    }
+
+    .option-btn:hover {
+      background: rgba(30, 64, 175, 0.55);
+      box-shadow: 0 8px 16px rgba(30, 64, 175, 0.45);
+    }
+
+    .option-btn.selected {
+      border-color: var(--accent);
+      background: radial-gradient(circle at top left, var(--accent-soft), rgba(15, 23, 42, 0.98));
+      box-shadow: 0 10px 18px rgba(34, 197, 94, 0.35);
+    }
+
+    .custom-response {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .custom-response textarea {
+      resize: vertical;
+      min-height: 60px;
+      max-height: 160px;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: #020617;
+      color: var(--text);
+      padding: 8px 9px;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .custom-response textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.7);
+    }
+
+    .custom-hint {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .scenario-footer {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .scenario-footer-left {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* Stats panel */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .stat-block {
+      background: radial-gradient(circle at top left, #020617, #020617);
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      padding: 8px 9px 9px;
+      font-size: 0.78rem;
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+      gap: 6px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .stat-value {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .stat-bar {
+      position: relative;
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background: #020617;
+      overflow: hidden;
+    }
+
+    .stat-bar-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), #22c55e);
+      transition: width 0.25s ease-out;
+    }
+
+    .stat-extra {
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .log {
+      margin-top: 6px;
+      max-height: 136px;
+      overflow-y: auto;
+      padding-right: 4px;
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .log-item {
+      margin-bottom: 4px;
+    }
+
+    .log-item strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    /* End screen */
+    .end-screen {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px 9px;
+      border-radius: 14px;
+      background: radial-gradient(circle at top left, #0b1120, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      margin-top: 6px;
+      font-size: 0.85rem;
+    }
+
+    .end-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .end-rank {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .end-metric-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 12px;
+      font-size: 0.8rem;
+    }
+
+    .end-footnote {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .error-text {
+      color: var(--danger);
+      font-size: 0.76rem;
+    }
+
+    @media (max-width: 800px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .app {
+        padding: 16px 12px 14px;
+        border-radius: 18px;
+      }
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .title-group h1 {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="title-group">
+        <h1>Hillview Middle School Teacher Simulator</h1>
+        <p>Juggle learning, likability, and chaos over one virtual school year.</p>
+      </div>
+      <div class="badge">Hillview · Menlo Park</div>
+    </header>
+
+    <div class="layout">
+      <!-- Left: Scenario / Start / End -->
+      <section class="panel" id="scenario-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title" id="panel-title-label">Setup</div>
+            <div class="panel-subtitle" id="panel-subtitle-label">
+              Choose your class size and begin the year.
+            </div>
+          </div>
+          <button class="muted-btn" id="restart-btn" style="display:none;">Restart year</button>
+        </div>
+
+        <div id="start-screen" class="start-screen">
+          <div>
+            <p style="margin:0 0 8px;font-size:0.9rem;">
+              You&rsquo;re a Hillview teacher for one school year. Each month, something chaotic happens.
+              Pick how you respond, or write your own plan.
+            </p>
+            <p style="margin:0;font-size:0.82rem;color:var(--muted);">
+              The game will score you on two things:
+              <strong>how much your students learn</strong> and
+              <strong>how much they like & respect you</strong>.
+            </p>
+          </div>
+
+          <div class="start-row">
+            <label for="class-size">Class size:</label>
+            <select id="class-size">
+              <option value="16">16 students (almost chill)</option>
+              <option value="22" selected>22 students (realistic)</option>
+              <option value="28">28 students (crowded)</option>
+              <option value="32">32 students (dungeon mode)</option>
+              <option value="36">36 students (why would you do this)</option>
+            </select>
+          </div>
+
+          <div class="start-row">
+            <label>Year length:</label>
+            <span style="font-size:0.85rem;">12 scenarios (one per month)</span>
+          </div>
+
+          <div class="start-row">
+            <button class="primary-btn" id="start-btn">
+              Start school year
+              <span>▶</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="scenario-container" style="display:none;">
+          <div class="scenario-body">
+            <div class="scenario-meta">
+              <div>
+                <span id="round-label">Month 1 of 12</span>
+              </div>
+              <div class="pill-soft">
+                <span id="class-meta-text">22 students · Normal chaos</span>
+              </div>
+            </div>
+
+            <div class="scenario-text">
+              <div id="scenario-text"></div>
+            </div>
+
+            <div class="options" id="options-container">
+              <!-- Generated buttons -->
+            </div>
+
+            <div class="custom-response">
+              <label for="custom-input">Or write your own response:</label>
+              <textarea id="custom-input" placeholder="Type what you&rsquo;d actually do or say here..."></textarea>
+              <div class="custom-hint">
+                Tip: Explain your thinking &mdash; calm, clear, and fair tends to work well.
+              </div>
+            </div>
+
+            <div class="scenario-footer">
+              <div class="scenario-footer-left">
+                <span id="feedback-text">Pick an option or write your own response.</span>
+              </div>
+              <div>
+                <button class="primary-btn" id="submit-btn">
+                  Submit &amp; see outcome
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="end-screen" class="end-screen">
+            <div class="end-title">Year Complete &mdash; Teacher Report</div>
+            <div class="end-rank" id="end-rank"></div>
+            <div class="end-metric-row" id="end-metrics"></div>
+            <div class="end-footnote" id="end-footnote"></div>
+            <div>
+              <button class="primary-btn" id="play-again-btn">Teach another year</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Stats / Log -->
+      <aside class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Class Status</div>
+            <div class="panel-subtitle">
+              Track how your choices affect learning and likability.
+            </div>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-block">
+            <div class="stat-header">
+              <div class="stat-label">Student Learning</div>
+              <div class="stat-value" id="learning-value">0 / 100</div>
+            </div>
+            <div class="stat-bar">
+              <div class="stat-bar-fill" id="learning-bar" style="width:0%;"></div>
+            </div>
+            <div class="stat-extra">
+              <span id="learning-trend">No data yet.</span>
+              <span>Higher = more actual learning.</span>
+            </div>
+          </div>
+
+          <div class="stat-block">
+            <div class="stat-header">
+              <div class="stat-label">Likability &amp; Respect</div>
+              <div class="stat-value" id="likability-value">0 / 100</div>
+            </div>
+            <div class="stat-bar">
+              <div class="stat-bar-fill" id="likability-bar" style="width:0%;"></div>
+            </div>
+            <div class="stat-extra">
+              <span id="likability-trend">No data yet.</span>
+              <span>Higher = kids actually like you.</span>
+            </div>
+          </div>
+
+          <div class="stat-block">
+            <div class="stat-header">
+              <div class="stat-label">Year Progress</div>
+              <div class="stat-value" id="progress-value">0 / 12</div>
+            </div>
+            <div class="stat-extra">
+              <span id="difficulty-label">Difficulty: Normal</span>
+              <span id="round-mini-label">Month 0 of 12</span>
+            </div>
+            <div class="log" id="log-container">
+              <!-- log entries -->
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    // ===============================
+    // Core game configuration
+    // ===============================
+    const TOTAL_ROUNDS = 12;
+    const BASE_MAX_SCORE = 100; // rough cap
+    const BASE_PER_ROUND = 12; // each dimension max if you played perfectly
+
+    const scenarios = [
+      {
+        id: "phones",
+        label: "Phones & Classroom Management",
+        prompt: "It’s the middle of a group activity in your Hillview classroom when you notice three students under the table clearly texting on their phones, and a fourth filming what looks suspiciously like a TikTok. The rest of the class is half on-task, half watching the chaos. One student says: “You never crack down on phones, so why start now?”",
+        options: [
+          {
+            text: "Collect every phone in the room immediately and announce a zero-tolerance policy for the rest of the quarter.",
+            effects: { learning: 6, likability: -3 },
+            nuance: "Clear boundaries, but feels harsh and sudden."
+          },
+          {
+            text: "Ignore it, hoping the disruption passes so you don’t derail the activity.",
+            effects: { learning: -3, likability: 1 },
+            nuance: "Short-term calm, but your credibility erodes."
+          },
+          {
+            text: "Pause the activity, calmly restate your phone expectations, give a brief warning, and follow through with small consequences for repeat offenders.",
+            effects: { learning: 5, likability: 4 },
+            nuance: "Balances structure and fairness if you actually follow through."
+          },
+          {
+            text: "Turn it into a class discussion: ask students to propose fair phone rules, vote on them, and implement their plan on the spot.",
+            effects: { learning: 3, likability: 6 },
+            nuance: "Voice and choice boost buy-in, but you sacrifice some instructional time."
+          }
+        ]
+      },
+      {
+        id: "late_work",
+        label: "Late Work Avalanche",
+        prompt: "It’s the end of the trimester. A handful of students who’ve been missing work all term suddenly show up with giant stacks of late assignments, some clearly rushed. Meanwhile, your high-performers who turned everything in on time are asking if there’s any extra credit.",
+        options: [
+          {
+            text: "Accept everything with full credit so everyone starts fresh and stress is reduced.",
+            effects: { learning: 0, likability: 4 },
+            nuance: "Reduces anxiety but undercuts responsibility and effort."
+          },
+          {
+            text: "Refuse all late work. Deadlines are deadlines.",
+            effects: { learning: -2, likability: -4 },
+            nuance: "Clear message, but demoralizing and rigid."
+          },
+          {
+            text: "Accept late work with partial credit and require a short reflection on why it was late and how they’ll plan better next time.",
+            effects: { learning: 6, likability: 3 },
+            nuance: "Builds skills and maintains some fairness."
+          },
+          {
+            text: "Offer one “late-work amnesty” day for all students, including on-time kids who want revision credit, but cap the maximum grade.",
+            effects: { learning: 5, likability: 5 },
+            nuance: "Supports many students but creates a lot of grading work."
+          }
+        ]
+      },
+      {
+        id: "parent_email",
+        label: "Spicy Parent Email",
+        prompt: "You open your inbox to a long email from a parent saying their child feels you’re “unfair and targeting them,” citing specific moments you remember differently. The parent is CC’ing the counselor and the principal, and asks for an “immediate explanation.” You’re tired, and your prep time just evaporated.",
+        options: [
+          {
+            text: "Fire back a detailed email immediately defending each of your decisions point by point.",
+            effects: { learning: 0, likability: -3 },
+            nuance: "May feel satisfying, but escalates tension."
+          },
+          {
+            text: "Ignore the email for a few days and hope the parent cools down.",
+            effects: { learning: -1, likability: -2 },
+            nuance: "Delays the stress but undermines trust."
+          },
+          {
+            text: "Reply briefly, acknowledging their concern, and suggest a meeting with you, the student, and counselor to hear everyone’s perspective.",
+            effects: { learning: 4, likability: 4 },
+            nuance: "Centers the student and shows collaboration."
+          },
+          {
+            text: "Forward the email to your admin and ask them to handle it for you.",
+            effects: { learning: 1, likability: 1 },
+            nuance: "Protects your time, but may limit your relationship with the family."
+          }
+        ]
+      },
+      {
+        id: "group_project",
+        label: "Group Project Drama",
+        prompt: "During a multi-week group project, one student pulls you aside and says they’re doing all the work while their partners “mess around and argue.” Another group has two very strong personalities steamrolling quieter classmates. Presentations are next week.",
+        options: [
+          {
+            text: "Let the groups sort it out themselves. Real life isn’t always fair.",
+            effects: { learning: -2, likability: 0 },
+            nuance: "Builds resilience… maybe. But some kids opt out."
+          },
+          {
+            text: "Switch students around into new, more balanced groups, even if it frustrates them.",
+            effects: { learning: 4, likability: 0 },
+            nuance: "More functional groups, but disrupts existing dynamics."
+          },
+          {
+            text: "Have each student complete a private peer-evaluation that affects their individual grade and hold quick check-ins with struggling groups.",
+            effects: { learning: 6, likability: 3 },
+            nuance: "Balances accountability and support, but takes your time."
+          },
+          {
+            text: "Give a mini-lesson on collaboration norms, then offer optional teacher-mediated conflict resolution sessions during work time.",
+            effects: { learning: 5, likability: 4 },
+            nuance: "Teaches skills but may not fully solve extreme cases."
+          }
+        ]
+      },
+      {
+        id: "sub_plan",
+        label: "Sub Plan Chaos",
+        prompt: "You wake up sick and realize you’ll be out for two days right in the middle of a tricky unit. You can either leave something simple for the sub or try to keep the unit rolling without you there to guide it.",
+        options: [
+          {
+            text: "Leave low-stakes worksheets and a movie so the sub can survive and your room is intact when you return.",
+            effects: { learning: 0, likability: 3 },
+            nuance: "Kids are happy, but you lose momentum."
+          },
+          {
+            text: "Leave detailed lesson plans and expect the sub to run full instruction.",
+            effects: { learning: 4, likability: 0 },
+            nuance: "Some learning happens, but execution is hit-or-miss."
+          },
+          {
+            text: "Assign an independent project that builds on prior learning and can be completed with clear written directions and choices.",
+            effects: { learning: 5, likability: 3 },
+            nuance: "Students stay engaged, but some may need more support."
+          },
+          {
+            text: "Post asynchronous lesson videos you record quickly from home, with guided notes and check-in questions.",
+            effects: { learning: 6, likability: 2 },
+            nuance: "High cognitive load for you while sick, strong continuity for students."
+          }
+        ]
+      },
+      {
+        id: "behavior_escalation",
+        label: "Behavior Escalation",
+        prompt: "Two students who usually get along suddenly start sniping at each other during discussion. The comments escalate into personal insults. Others are laughing, and one student is clearly on the verge of tears.",
+        options: [
+          {
+            text: "Call both students out in front of the class and demand they apologize immediately.",
+            effects: { learning: -1, likability: -1 },
+            nuance: "May stop the behavior but can increase shame and resentment."
+          },
+          {
+            text: "Ignore it so you can finish the lesson on time.",
+            effects: { learning: -3, likability: -2 },
+            nuance: "The target of the comments feels unsupported."
+          },
+          {
+            text: "Pause the discussion, calmly name what you’re seeing, reset expectations for respect, and check in privately with both students after class.",
+            effects: { learning: 4, likability: 5 },
+            nuance: "Protects the climate and relationships."
+          },
+          {
+            text: "Remove both students from the room immediately and send them to the office, then continue teaching.",
+            effects: { learning: 1, likability: -2 },
+            nuance: "Short-term control, but little skill-building."
+          }
+        ]
+      },
+      {
+        id: "grading_fairness",
+        label: "Grading Fairness",
+        prompt: "You just graded a major assessment. Scores range from very low to nearly perfect. A student who normally gets high grades did poorly and looks crushed. A few others who improved dramatically are ecstatic, and the class is buzzing about what’s “fair.”",
+        options: [
+          {
+            text: "Curve the scores so most students end up near a B, then move on quickly.",
+            effects: { learning: 1, likability: 2 },
+            nuance: "Short-term happiness, but weak feedback signal."
+          },
+          {
+            text: "Keep all grades as-is and just post them. No retakes or corrections.",
+            effects: { learning: 2, likability: -2 },
+            nuance: "Clear expectations, limited growth opportunities."
+          },
+          {
+            text: "Allow corrections or retakes where students must explain their mistakes and show new understanding.",
+            effects: { learning: 6, likability: 3 },
+            nuance: "Boosts mastery, more grading for you."
+          },
+          {
+            text: "Hold a brief class discussion explaining the purpose of the assessment and how grades connect to learning, then offer optional help sessions.",
+            effects: { learning: 5, likability: 4 },
+            nuance: "Transparency and support, but not everyone takes you up on it."
+          }
+        ]
+      },
+      {
+        id: "quiet_kid",
+        label: "Quiet Student",
+        prompt: "There’s a student who almost never speaks in class discussions but turns in thoughtful written work. Group members sometimes talk over them. You worry that the student’s voice isn’t being heard.",
+        options: [
+          {
+            text: "Randomly call on them more often so they “get used to” speaking up.",
+            effects: { learning: 1, likability: -2 },
+            nuance: "May increase participation but raise anxiety."
+          },
+          {
+            text: "Let them stay quiet; they’re doing fine on paper.",
+            effects: { learning: 0, likability: 0 },
+            nuance: "Safe, but misses a chance to build confidence."
+          },
+          {
+            text: "Check in privately about how they feel in discussions and offer choices like contributing via written notes, digital posts, or smaller groups.",
+            effects: { learning: 4, likability: 5 },
+            nuance: "Respects their needs and slowly expands participation."
+          },
+          {
+            text: "Assign them as group “discussion leader” for a day so they’re forced to take charge.",
+            effects: { learning: 2, likability: -1 },
+            nuance: "Can work for some, but can feel like a setup."
+          }
+        ]
+      },
+      {
+        id: "transition_chaos",
+        label: "Transition Chaos",
+        prompt: "Between activities, your class turns into a swirling vortex of side conversations, chair-spinning, and pencil-throwing. Transitions take five minutes instead of one, and you’re losing big chunks of instructional time.",
+        options: [
+          {
+            text: "Shout over the noise until everyone is quiet, then start the next activity.",
+            effects: { learning: -1, likability: -1 },
+            nuance: "Works briefly, drains your energy."
+          },
+          {
+            text: "Accept that transitions are messy and shorten your lesson plans.",
+            effects: { learning: -3, likability: 1 },
+            nuance: "Kids enjoy the looseness; learning takes the hit."
+          },
+          {
+            text: "Teach and practice a specific transition routine with a visible countdown and small positive reinforcement when they beat the timer.",
+            effects: { learning: 5, likability: 4 },
+            nuance: "Front-loaded effort, long-term payoff."
+          },
+          {
+            text: "Assign seats and silent transitions until the class meets a behavior goal.",
+            effects: { learning: 3, likability: -1 },
+            nuance: "Order returns, but students may resent the clampdown."
+          }
+        ]
+      },
+      {
+        id: "homework_debate",
+        label: "Homework Debate",
+        prompt: "Students complain that homework is “pointless” and “we have sports and activities.” Some are clearly exhausted; others seem fine. Your current homework policy is inconsistent, and families have asked for clarity.",
+        options: [
+          {
+            text: "Eliminate homework entirely and keep all practice in class.",
+            effects: { learning: -1, likability: 5 },
+            nuance: "Kids cheer, but some lose extra practice."
+          },
+          {
+            text: "Double down and assign more homework to build “rigor and resilience.”",
+            effects: { learning: 1, likability: -4 },
+            nuance: "Might help a few, burns many out."
+          },
+          {
+            text: "Set a clear weekly homework limit focused on meaningful, short tasks that directly support upcoming lessons.",
+            effects: { learning: 5, likability: 3 },
+            nuance: "Predictable, purposeful workload."
+          },
+          {
+            text: "Offer optional challenge homework for those who want more, with no penalty for skipping it.",
+            effects: { learning: 3, likability: 4 },
+            nuance: "Great for motivated kids, less impact on struggling ones."
+          }
+        ]
+      },
+      {
+        id: "identity_misstep",
+        label: "Identity Misstep",
+        prompt: "During a light-hearted class moment, a student makes a joke about another student’s background that crosses the line into stereotype territory. Some kids laugh; others look uncomfortable. The targeted student goes quiet.",
+        options: [
+          {
+            text: "Brush it off as “kids being kids” and continue the lesson.",
+            effects: { learning: -3, likability: -2 },
+            nuance: "Signals that harmful jokes are tolerated."
+          },
+          {
+            text: "Scold the student publicly and assign a detention.",
+            effects: { learning: 1, likability: -2 },
+            nuance: "Shows the line matters but doesn’t build understanding."
+          },
+          {
+            text: "Pause, name why the comment isn’t okay, center the impact over intent, and invite a brief reset in norms.",
+            effects: { learning: 4, likability: 3 },
+            nuance: "Models inclusive community in real time."
+          },
+          {
+            text: "Address it privately later with the student who made the comment and check in with the student who was targeted.",
+            effects: { learning: 3, likability: 4 },
+            nuance: "Protects privacy but misses a chance for class-wide learning."
+          }
+        ]
+      },
+      {
+        id: "field_trip",
+        label: "Field Trip Dilemma",
+        prompt: "You have the chance to take your class on a local field trip that deeply connects to your curriculum, but it’ll cost extra time to organize and means you’ll fall slightly behind the pacing guide.",
+        options: [
+          {
+            text: "Skip the trip and stick tightly to the pacing guide.",
+            effects: { learning: 2, likability: 0 },
+            nuance: "Predictable but forgettable experience."
+          },
+          {
+            text: "Go all-in on the trip, even if it means dropping a later unit.",
+            effects: { learning: 4, likability: 5 },
+            nuance: "Memorable experience, but some standards get less coverage."
+          },
+          {
+            text: "Do the trip but front-load and streamline surrounding lessons so you still hit essentials.",
+            effects: { learning: 5, likability: 4 },
+            nuance: "Maximizes both depth and joy with extra planning from you."
+          },
+          {
+            text: "Offer the trip as an optional weekend activity and keep class on schedule.",
+            effects: { learning: 3, likability: 2 },
+            nuance: "Equity concerns if not everyone can attend."
+          }
+        ]
+      }
+    ];
+
+    // ===============================
+    // Game state
+    // ===============================
+    const state = {
+      classSize: 22,
+      difficultyMultiplier: 1,
+      round: 0,
+      maxRounds: TOTAL_ROUNDS,
+      cumulativeLearning: 0,
+      cumulativeLikability: 0,
+      lastLearningDelta: 0,
+      lastLikabilityDelta: 0,
+      history: [],
+      currentScenario: null,
+      shuffledScenarios: []
+    };
+
+    // ===============================
+    // DOM references
+    // ===============================
+    const startScreen = document.getElementById("start-screen");
+    const scenarioContainer = document.getElementById("scenario-container");
+    const restartBtn = document.getElementById("restart-btn");
+    const startBtn = document.getElementById("start-btn");
+    const submitBtn = document.getElementById("submit-btn");
+    const playAgainBtn = document.getElementById("play-again-btn");
+
+    const classSizeSelect = document.getElementById("class-size");
+    const scenarioTextEl = document.getElementById("scenario-text");
+    const optionsContainer = document.getElementById("options-container");
+    const customInput = document.getElementById("custom-input");
+    const feedbackText = document.getElementById("feedback-text");
+
+    const roundLabel = document.getElementById("round-label");
+    const roundMiniLabel = document.getElementById("round-mini-label");
+    const classMetaText = document.getElementById("class-meta-text");
+    const difficultyLabel = document.getElementById("difficulty-label");
+
+    const panelTitleLabel = document.getElementById("panel-title-label");
+    const panelSubtitleLabel = document.getElementById("panel-subtitle-label");
+
+    const learningValue = document.getElementById("learning-value");
+    const learningBar = document.getElementById("learning-bar");
+    const learningTrend = document.getElementById("learning-trend");
+
+    const likabilityValue = document.getElementById("likability-value");
+    const likabilityBar = document.getElementById("likability-bar");
+    const likabilityTrend = document.getElementById("likability-trend");
+
+    const progressValue = document.getElementById("progress-value");
+    const logContainer = document.getElementById("log-container");
+
+    const endScreen = document.getElementById("end-screen");
+    const endRank = document.getElementById("end-rank");
+    const endMetrics = document.getElementById("end-metrics");
+    const endFootnote = document.getElementById("end-footnote");
+
+    // ===============================
+    // Utility helpers
+    // ===============================
+    function shuffleArray(arr) {
+      const copy = arr.slice();
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function clamp(num, min, max) {
+      return Math.max(min, Math.min(max, num));
+    }
+
+    function formatTrend(delta) {
+      if (delta > 2) return `Last move: ▲ strong gain (+${delta})`;
+      if (delta > 0) return `Last move: ▲ small gain (+${delta})`;
+      if (delta === 0) return "Last move: ▬ no major change";
+      if (delta < -2) return `Last move: ▼ big drop (${delta})`;
+      return `Last move: ▼ small drop (${delta})`;
+    }
+
+    function computeDifficultyFromClassSize(size) {
+      // 16 students ~ 0.8, 36 ~ 1.3
+      return 0.8 + (size - 16) * 0.025;
+    }
+
+    function difficultyLabelFromMultiplier(mult) {
+      if (mult <= 0.95) return "Difficulty: Chill";
+      if (mult <= 1.05) return "Difficulty: Normal";
+      if (mult <= 1.15) return "Difficulty: Busy";
+      if (mult <= 1.25) return "Difficulty: Crowded";
+      return "Difficulty: Legendary";
+    }
+
+    // ===============================
+    // "Fake LLM" logic (MVP)
+    // ===============================
+    function fakeLLMGenerateScenarioText(baseScenario) {
+      // For now we just return the prompt; later this could be a real LLM call.
+      return baseScenario.prompt;
+    }
+
+    function scoreOptionWithDifficulty(baseEffects, difficultyMult) {
+      const { learning, likability } = baseEffects;
+      const scaledL = learning / difficultyMult;
+      const scaledR = likability / difficultyMult;
+
+      return {
+        learning: Math.round(clamp(scaledL, -6, 8)),
+        likability: Math.round(clamp(scaledR, -6, 8))
+      };
+    }
+
+    function analyzeCustomResponse(text, scenarioLabel) {
+      const lower = text.toLowerCase();
+      let learning = 0;
+      let likability = 0;
+
+      const positivityWords = ["thank", "appreciate", "proud", "great job", "well done", "nice work"];
+      const structureWords = ["expectation", "routine", "consequence", "plan", "structure", "boundaries"];
+      const relationshipWords = ["listen", "hear you", "understand", "feel", "check in", "together"];
+      const negativeWords = ["yell", "scream", "shout", "detention", "punish", "zero", "fail"];
+      const reflectionWords = ["reflect", "reflection", "why it happened", "next time", "improve"];
+
+      function countMatches(words) {
+        return words.reduce((count, w) => (lower.includes(w) ? count + 1 : count), 0);
+      }
+
+      learning += countMatches(structureWords) * 2;
+      learning += countMatches(reflectionWords) * 2;
+      learning += countMatches(positivityWords) * 1;
+
+      likability += countMatches(positivityWords) * 2;
+      likability += countMatches(relationshipWords) * 3;
+
+      const neg = countMatches(negativeWords);
+      learning -= neg;
+      likability -= neg * 2;
+
+      if (lower.includes("hillview")) {
+        learning += 1;
+        likability += 1;
+      }
+
+      learning = clamp(learning, -4, 7);
+      likability = clamp(likability, -5, 7);
+
+      return {
+        learning,
+        likability,
+        explanation:
+          "Scored based on how much structure, empathy, and reflection your plan showed."
+      };
+    }
+
+    function fakeLLMEvaluate({ scenario, choiceIndex, customText, classSize, difficultyMult }) {
+      let baseLearning = 0;
+      let baseLikability = 0;
+      let explanation = "";
+
+      if (choiceIndex !== null) {
+        const option = scenario.options[choiceIndex];
+        const scored = scoreOptionWithDifficulty(option.effects, difficultyMult);
+        baseLearning = scored.learning;
+        baseLikability = scored.likability;
+        explanation = option.nuance;
+      } else {
+        const customScore = analyzeCustomResponse(customText, scenario.label);
+        const scaled = scoreOptionWithDifficulty(
+          { learning: customScore.learning, likability: customScore.likability },
+          difficultyMult
+        );
+        baseLearning = scaled.learning;
+        baseLikability = scaled.likability;
+        explanation = customScore.explanation;
+      }
+
+      const wiggleL = Math.floor(Math.random() * 3) - 1; // -1 to +1
+      const wiggleR = Math.floor(Math.random() * 3) - 1;
+
+      const finalLearning = clamp(baseLearning + wiggleL, -6, 8);
+      const finalLikability = clamp(baseLikability + wiggleR, -6, 8);
+
+      return {
+        learningDelta: finalLearning,
+        likabilityDelta: finalLikability,
+        explanation
+      };
+    }
+
+    // ===============================
+    // Rendering functions
+    // ===============================
+    function updateStatsUI() {
+      const maxPossible = BASE_PER_ROUND * state.maxRounds;
+      const learningPct = clamp((state.cumulativeLearning / maxPossible) * 100, 0, 100);
+      const likabilityPct = clamp((state.cumulativeLikability / maxPossible) * 100, 0, 100);
+
+      learningValue.textContent = `${clamp(state.cumulativeLearning, 0, maxPossible)} / ${maxPossible}`;
+      likabilityValue.textContent = `${clamp(state.cumulativeLikability, 0, maxPossible)} / ${maxPossible}`;
+
+      learningBar.style.width = `${learningPct}%`;
+      likabilityBar.style.width = `${likabilityPct}%`;
+
+      if (state.round === 0) {
+        learningTrend.textContent = "No data yet.";
+        likabilityTrend.textContent = "No data yet.";
+      } else {
+        learningTrend.textContent = formatTrend(state.lastLearningDelta);
+        likabilityTrend.textContent = formatTrend(state.lastLikabilityDelta);
+      }
+
+      progressValue.textContent = `${state.round} / ${state.maxRounds}`;
+      roundMiniLabel.textContent = `Month ${state.round} of ${state.maxRounds}`;
+      difficultyLabel.textContent = difficultyLabelFromMultiplier(state.difficultyMultiplier);
+    }
+
+    function appendLogEntry(entry) {
+      const div = document.createElement("div");
+      div.className = "log-item";
+      div.innerHTML = `<strong>Month ${entry.round}:</strong> ${entry.summary}`;
+      logContainer.appendChild(div);
+      logContainer.scrollTop = logContainer.scrollHeight;
+    }
+
+    function renderScenario() {
+      const scenario = state.currentScenario;
+      if (!scenario) return;
+
+      roundLabel.textContent = `Month ${state.round} of ${state.maxRounds}`;
+      scenarioTextEl.textContent = fakeLLMGenerateScenarioText(scenario);
+
+      optionsContainer.innerHTML = "";
+      scenario.options.forEach((opt, index) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.textContent = opt.text;
+        btn.dataset.index = String(index);
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".option-btn")
+            .forEach(b => b.classList.remove("selected"));
+          btn.classList.add("selected");
+          feedbackText.textContent = "Option selected. You can still tweak or add a custom response.";
+          feedbackText.classList.remove("error-text");
+        });
+        optionsContainer.appendChild(btn);
+      });
+
+      customInput.value = "";
+      feedbackText.textContent = "Pick an option or write your own response.";
+      feedbackText.classList.remove("error-text");
+    }
+
+    function showStartScreen() {
+      startScreen.style.display = "flex";
+      scenarioContainer.style.display = "none";
+      restartBtn.style.display = "none";
+      panelTitleLabel.textContent = "Setup";
+      panelSubtitleLabel.textContent = "Choose your class size and begin the year.";
+      endScreen.style.display = "none";
+    }
+
+    function showScenarioScreen() {
+      startScreen.style.display = "none";
+      scenarioContainer.style.display = "block";
+      restartBtn.style.display = "inline-block";
+      panelTitleLabel.textContent = "Live Scenario";
+      panelSubtitleLabel.textContent = "Make a choice and see how your class reacts.";
+      endScreen.style.display = "none";
+    }
+
+    function showEndScreen() {
+      endScreen.style.display = "flex";
+      panelTitleLabel.textContent = "Year Complete";
+      panelSubtitleLabel.textContent = "See how you did, then try a new year.";
+      feedbackText.textContent = "Year finished. Check your report card on the right.";
+      feedbackText.classList.remove("error-text");
+    }
+
+    function computeFinalRank() {
+      const maxPossible = BASE_PER_ROUND * state.maxRounds;
+      const lPct = clamp((state.cumulativeLearning / maxPossible) * 100, 0, 120);
+      const rPct = clamp((state.cumulativeLikability / maxPossible) * 100, 0, 120);
+
+      let rank = "";
+      let blurb = "";
+
+      if (lPct >= 85 && rPct >= 85) {
+        rank = "🟢 Hillview Legend";
+        blurb =
+          "Your students learned a ton, mostly liked you, and nobody wrote a spicy email to the superintendent. Iconic.";
+      } else if (lPct >= 80 && rPct >= 70) {
+        rank = "🟢 High-Impact Teacher";
+        blurb =
+          "Challenging, supportive, and mostly sane. Kids complain just enough that we know you’re doing it right.";
+      } else if (lPct >= 70 && rPct >= 60) {
+        rank = "🟡 Solid & Growing";
+        blurb =
+          "Your classroom works, kids learn, and you’re building your toolkit. A few tweaks away from legendary.";
+      } else if (lPct >= 55 && rPct >= 55) {
+        rank = "🟡 Survived the Year";
+        blurb =
+          "You made it! Some wins, some chaos, but everyone’s still standing. Pretty realistic, honestly.";
+      } else if (lPct >= 45 || rPct >= 45) {
+        rank = "🟠 Chaotic Neutral Teacher";
+        blurb =
+          "Some kids loved you, some learned a lot, and some are… not totally sure what happened. Growth opportunity!";
+      } else {
+        rank = "🔴 Walking Content for Teacher TikTok";
+        blurb =
+          "On the bright side, the stories your students tell about this year will be legendary. Maybe try again?";
+      }
+
+      return { rank, blurb, learningPct: Math.round(lPct), likePct: Math.round(rPct) };
+    }
+
+    function renderEndScreen() {
+      const { rank, blurb, learningPct, likePct } = computeFinalRank();
+
+      endRank.textContent = rank;
+      endMetrics.innerHTML = `
+        <span>Learning score: <strong>${learningPct}</strong>/100</span>
+        <span>Likability score: <strong>${likePct}</strong>/100</span>
+        <span>Class size: <strong>${state.classSize}</strong> students</span>
+      `;
+
+      const diffLabel = difficultyLabelFromMultiplier(state.difficultyMultiplier);
+      endFootnote.textContent =
+        blurb +
+        " " +
+        `You played on ${diffLabel.replace("Difficulty: ", "").toLowerCase()} with ${state.classSize} students.`;
+
+      showEndScreen();
+    }
+
+    // ===============================
+    // Game lifecycle
+    // ===============================
+    function resetGame() {
+      state.classSize = parseInt(classSizeSelect.value, 10) || 22;
+      state.difficultyMultiplier = computeDifficultyFromClassSize(state.classSize);
+      state.round = 0;
+      state.cumulativeLearning = 0;
+      state.cumulativeLikability = 0;
+      state.lastLearningDelta = 0;
+      state.lastLikabilityDelta = 0;
+      state.history = [];
+      state.shuffledScenarios = shuffleArray(scenarios).slice(0, state.maxRounds);
+      state.currentScenario = null;
+
+      classMetaText.textContent = `${state.classSize} students · ${difficultyLabelFromMultiplier(
+        state.difficultyMultiplier
+      ).replace("Difficulty: ", "")}`;
+      logContainer.innerHTML = "";
+      updateStatsUI();
+      showStartScreen();
+    }
+
+    function startYear() {
+      state.classSize = parseInt(classSizeSelect.value, 10) || 22;
+      state.difficultyMultiplier = computeDifficultyFromClassSize(state.classSize);
+      state.round = 0;
+      state.cumulativeLearning = 0;
+      state.cumulativeLikability = 0;
+      state.lastLearningDelta = 0;
+      state.lastLikabilityDelta = 0;
+      state.history = [];
+      state.shuffledScenarios = shuffleArray(scenarios).slice(0, state.maxRounds);
+
+      classMetaText.textContent = `${state.classSize} students · ${difficultyLabelFromMultiplier(
+        state.difficultyMultiplier
+      ).replace("Difficulty: ", "")}`;
+
+      logContainer.innerHTML = "";
+      appendLogEntry({
+        round: 0,
+        summary: `New year started with ${state.classSize} students.`
+      });
+
+      nextRound();
+      showScenarioScreen();
+      updateStatsUI();
+    }
+
+    function nextRound() {
+      state.round += 1;
+      if (state.round > state.maxRounds) {
+        renderEndScreen();
+        return;
+      }
+
+      const scenarioIndex = state.round - 1;
+      state.currentScenario = state.shuffledScenarios[scenarioIndex] || scenarios[scenarioIndex % scenarios.length];
+      renderScenario();
+      updateStatsUI();
+    }
+
+    function handleSubmitChoice() {
+      if (!state.currentScenario) return;
+
+      const selectedBtn = document.querySelector(".option-btn.selected");
+      const rawCustom = customInput.value.trim();
+
+      let choiceIndex = null;
+      let customText = null;
+
+      if (rawCustom) {
+        customText = rawCustom;
+      } else if (selectedBtn) {
+        choiceIndex = parseInt(selectedBtn.dataset.index, 10);
+      } else {
+        feedbackText.textContent = "Pick an option or write your own response before submitting.";
+        feedbackText.classList.add("error-text");
+        return;
+      }
+
+      const evalResult = fakeLLMEvaluate({
+        scenario: state.currentScenario,
+        choiceIndex,
+        customText,
+        classSize: state.classSize,
+        difficultyMult: state.difficultyMultiplier
+      });
+
+      state.cumulativeLearning += evalResult.learningDelta;
+      state.cumulativeLikability += evalResult.likabilityDelta;
+      state.lastLearningDelta = evalResult.learningDelta;
+      state.lastLikabilityDelta = evalResult.likabilityDelta;
+
+      const summaryPieces = [];
+      if (evalResult.learningDelta > 0) {
+        summaryPieces.push(`learning +${evalResult.learningDelta}`);
+      } else if (evalResult.learningDelta < 0) {
+        summaryPieces.push(`learning ${evalResult.learningDelta}`);
+      }
+
+      if (evalResult.likabilityDelta > 0) {
+        summaryPieces.push(`likability +${evalResult.likabilityDelta}`);
+      } else if (evalResult.likabilityDelta < 0) {
+        summaryPieces.push(`likability ${evalResult.likabilityDelta}`);
+      }
+
+      const summary =
+        (summaryPieces.length ? summaryPieces.join(", ") : "no major change") +
+        `. ${evalResult.explanation}`;
+
+      state.history.push({
+        round: state.round,
+        scenarioId: state.currentScenario.id,
+        choiceIndex,
+        usedCustom: !!customText,
+        deltas: {
+          learning: evalResult.learningDelta,
+          likability: evalResult.likabilityDelta
+        },
+        explanation: evalResult.explanation
+      });
+
+      appendLogEntry({ round: state.round, summary });
+
+      feedbackText.textContent = `Outcome: ${summary}`;
+      feedbackText.classList.remove("error-text");
+
+      updateStatsUI();
+
+      setTimeout(() => {
+        if (state.round >= state.maxRounds) {
+          renderEndScreen();
+        } else {
+          nextRound();
+        }
+      }, 900);
+    }
+
+    // ===============================
+    // Event listeners
+    // ===============================
+    startBtn.addEventListener("click", startYear);
+    restartBtn.addEventListener("click", resetGame);
+    submitBtn.addEventListener("click", handleSubmitChoice);
+    playAgainBtn.addEventListener("click", startYear);
+
+    classSizeSelect.addEventListener("change", () => {
+      const previewSize = parseInt(classSizeSelect.value, 10) || 22;
+      const previewDiff = computeDifficultyFromClassSize(previewSize);
+      classMetaText.textContent = `${previewSize} students · ${difficultyLabelFromMultiplier(previewDiff)
+        .replace("Difficulty: ", "")}`;
+    });
+
+    // Init
+    resetGame();
+  </script>
+</body>
+</html>
