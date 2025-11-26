@@ -614,560 +614,598 @@
     </div>
   </div>
   <script>
-    // ===============================
-    // Core config
-    // ===============================
-    const API_BASE = "https://dexter-bain.onrender.com/api/hillview-sim";
+  // ===============================
+  // Core config
+  // ===============================
+  const API_BASE = "https://dexter-bain.onrender.com/api/hillview-sim";
 
-    const MONTHS = [
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June"
-    ];
-    const TOTAL_ROUNDS = MONTHS.length;
+  const MONTHS = [
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June"
+  ];
+  const TOTAL_ROUNDS = MONTHS.length;
 
-    const SCORE_MIN = 0;
-    const SCORE_MAX = 100;
-    const SCORE_START = 50;
+  const SCORE_MIN = 0;
+  const SCORE_MAX = 100;
+  const SCORE_START = 50;
 
-    // ===============================
-    // Game state
-    // ===============================
-    const state = {
-      classSize: 22,
-      studentsRemaining: 22,
-      maxStudents: 22,
-      difficultyMultiplier: 1,
-      round: 0,
-      maxRounds: TOTAL_ROUNDS,
-      learningScore: SCORE_START,
-      likabilityScore: SCORE_START,
-      lastLearningDelta: 0,
-      lastLikabilityDelta: 0,
-      lastStudentsDelta: 0,
-      history: [],
-      currentScenario: null,
-      usedScenarioIds: [],
-      awaitingNextMonth: false
-    };
+  // ===============================
+  // Game state
+  // ===============================
+  const state = {
+    classSize: 22,
+    studentsRemaining: 22,
+    maxStudents: 22,
+    difficultyMultiplier: 1,
+    round: 0,
+    maxRounds: TOTAL_ROUNDS,
+    learningScore: SCORE_START,
+    likabilityScore: SCORE_START,
+    lastLearningDelta: 0,
+    lastLikabilityDelta: 0,
+    lastStudentsDelta: 0,
+    history: [],
+    currentScenario: null,
+    usedScenarioIds: [],
+    awaitingNextMonth: false
+  };
 
-    // ===============================
-    // DOM refs
-    // ===============================
-    const startScreen = document.getElementById("start-screen");
-    const scenarioContainer = document.getElementById("scenario-container");
-    const restartBtn = document.getElementById("restart-btn");
-    const startBtn = document.getElementById("start-btn");
-    const submitBtn = document.getElementById("submit-btn");
-    const playAgainBtn = document.getElementById("play-again-btn");
+  // ===============================
+  // DOM refs
+  // ===============================
+  const startScreen = document.getElementById("start-screen");
+  const scenarioContainer = document.getElementById("scenario-container");
+  const restartBtn = document.getElementById("restart-btn");
+  const startBtn = document.getElementById("start-btn");
+  const submitBtn = document.getElementById("submit-btn");
+  const playAgainBtn = document.getElementById("play-again-btn");
 
-    const classSizeSelect = document.getElementById("class-size");
-    const scenarioTextEl = document.getElementById("scenario-text");
-    const optionsContainer = document.getElementById("options-container");
-    const customInput = document.getElementById("custom-input");
-    const feedbackText = document.getElementById("feedback-text");
+  const classSizeSelect = document.getElementById("class-size");
+  const scenarioTextEl = document.getElementById("scenario-text");
+  const optionsContainer = document.getElementById("options-container");
+  const customInput = document.getElementById("custom-input");
+  const feedbackText = document.getElementById("feedback-text");
 
-    const roundLabel = document.getElementById("round-label");
-    const roundMiniLabel = document.getElementById("round-mini-label");
-    const classMetaText = document.getElementById("class-meta-text");
-    const difficultyLabel = document.getElementById("difficulty-label");
+  const roundLabel = document.getElementById("round-label");
+  const roundMiniLabel = document.getElementById("round-mini-label");
+  const classMetaText = document.getElementById("class-meta-text");
+  const difficultyLabel = document.getElementById("difficulty-label");
 
-    const panelTitleLabel = document.getElementById("panel-title-label");
-    const panelSubtitleLabel = document.getElementById("panel-subtitle-label");
+  const panelTitleLabel = document.getElementById("panel-title-label");
+  const panelSubtitleLabel = document.getElementById("panel-subtitle-label");
 
-    const learningValue = document.getElementById("learning-value");
-    const learningBar = document.getElementById("learning-bar");
-    const learningTrend = document.getElementById("learning-trend");
+  const learningValue = document.getElementById("learning-value");
+  const learningBar = document.getElementById("learning-bar");
+  const learningTrend = document.getElementById("learning-trend");
 
-    const likabilityValue = document.getElementById("likability-value");
-    const likabilityBar = document.getElementById("likability-bar");
-    const likabilityTrend = document.getElementById("likability-trend");
+  const likabilityValue = document.getElementById("likability-value");
+  const likabilityBar = document.getElementById("likability-bar");
+  const likabilityTrend = document.getElementById("likability-trend");
 
-    const studentsValue = document.getElementById("students-value");
-    const studentsTrend = document.getElementById("students-trend");
-    const studentsCapNote = document.getElementById("students-cap-note");
+  const studentsValue = document.getElementById("students-value");
+  const studentsTrend = document.getElementById("students-trend");
+  const studentsCapNote = document.getElementById("students-cap-note");
 
-    const progressValue = document.getElementById("progress-value");
-    const logContainer = document.getElementById("log-container");
+  const progressValue = document.getElementById("progress-value");
+  const logContainer = document.getElementById("log-container");
 
-    const endScreen = document.getElementById("end-screen");
-    const endRank = document.getElementById("end-rank");
-    const endMetrics = document.getElementById("end-metrics");
-    const endFootnote = document.getElementById("end-footnote");
+  const endScreen = document.getElementById("end-screen");
+  const endRank = document.getElementById("end-rank");
+  const endMetrics = document.getElementById("end-metrics");
+  const endFootnote = document.getElementById("end-footnote");
 
-    // ===============================
-    // Helpers
-    // ===============================
-    function clamp(num, min, max) {
-      return Math.max(min, Math.min(max, num));
+  // NEW: image elements (make sure these <img> exist in the HTML)
+  const scenarioImageEl = document.getElementById("scenario-image-img");
+  const previousImageEl = document.getElementById("previous-response-image-img");
+
+  // ===============================
+  // Helpers
+  // ===============================
+  function clamp(num, min, max) {
+    return Math.max(min, Math.min(max, num));
+  }
+
+  function computeDifficultyFromClassSize(size) {
+    // 16 -> ~0.85, 36 -> ~1.35
+    return 0.85 + (size - 16) * 0.025;
+  }
+
+  function difficultyLabelFromMultiplier(mult) {
+    if (mult <= 0.95) return "Difficulty: Chill";
+    if (mult <= 1.05) return "Difficulty: Normal";
+    if (mult <= 1.15) return "Difficulty: Busy";
+    if (mult <= 1.25) return "Difficulty: Crowded";
+    return "Difficulty: Legendary";
+  }
+
+  function formatTrend(delta) {
+    if (delta > 12) return `Last move: ▲ huge gain (+${delta})`;
+    if (delta > 5) return `Last move: ▲ strong gain (+${delta})`;
+    if (delta > 0) return `Last move: ▲ small gain (+${delta})`;
+    if (delta === 0) return "Last move: ▬ no major change";
+    if (delta < -12) return `Last move: ▼ huge drop (${delta})`;
+    if (delta < -5) return `Last move: ▼ strong drop (${delta})`;
+    return `Last move: ▼ small drop (${delta})`;
+  }
+
+  function formatStudentTrend(delta) {
+    if (delta > 2) return `Enrollment spike: +${delta} students joined.`;
+    if (delta > 0) return `Small gain: +${delta} student joined.`;
+    if (delta === 0) return "No enrollment change.";
+    if (delta < -2) return `${-delta} students left your class. Rough month.`;
+    return `${-delta} student left your class.`;
+  }
+
+  function appendLogEntry(entry) {
+    const div = document.createElement("div");
+    div.className = "log-item";
+    div.innerHTML = `<strong>${entry.monthLabel}:</strong> ${entry.headline}`;
+    logContainer.appendChild(div);
+    logContainer.scrollTop = logContainer.scrollHeight;
+  }
+
+  // Image helpers
+  function updateScenarioImage(url) {
+    if (!scenarioImageEl) return;
+    if (url) {
+      scenarioImageEl.src = url;
+      scenarioImageEl.style.display = "block";
+    } else {
+      scenarioImageEl.style.display = "none";
+    }
+  }
+
+  function updateDecisionImage(url) {
+    if (!previousImageEl) return;
+    if (url) {
+      previousImageEl.src = url;
+      previousImageEl.style.display = "block";
+    } else {
+      previousImageEl.style.display = "none";
+    }
+  }
+
+  // ===============================
+  // UI updates
+  // ===============================
+  function updateStatsUI() {
+    learningValue.textContent = `${state.learningScore} / 100`;
+    likabilityValue.textContent = `${state.likabilityScore} / 100`;
+
+    learningBar.style.width = `${(state.learningScore / 100) * 100}%`;
+    likabilityBar.style.width = `${(state.likabilityScore / 100) * 100}%`;
+
+    if (state.round === 0) {
+      learningTrend.textContent = "Game not started yet.";
+      likabilityTrend.textContent = "Game not started yet.";
+      studentsTrend.textContent = "No changes yet.";
+    } else {
+      learningTrend.textContent = formatTrend(state.lastLearningDelta);
+      likabilityTrend.textContent = formatTrend(state.lastLikabilityDelta);
+      studentsTrend.textContent = formatStudentTrend(state.lastStudentsDelta);
     }
 
-    function computeDifficultyFromClassSize(size) {
-      // 16 -> ~0.85, 36 -> ~1.35
-      return 0.85 + (size - 16) * 0.025;
+    studentsValue.textContent = state.studentsRemaining;
+    studentsCapNote.textContent = `Started with ${state.classSize}. Max so far: ${state.maxStudents}.`;
+
+    progressValue.textContent = `${state.round} / ${state.maxRounds}`;
+    if (state.round > 0 && state.round <= state.maxRounds) {
+      roundMiniLabel.textContent = `${MONTHS[state.round - 1]} (${state.round} of ${state.maxRounds})`;
+    } else {
+      roundMiniLabel.textContent = "No month yet";
     }
 
-    function difficultyLabelFromMultiplier(mult) {
-      if (mult <= 0.95) return "Difficulty: Chill";
-      if (mult <= 1.05) return "Difficulty: Normal";
-      if (mult <= 1.15) return "Difficulty: Busy";
-      if (mult <= 1.25) return "Difficulty: Crowded";
-      return "Difficulty: Legendary";
+    difficultyLabel.textContent = difficultyLabelFromMultiplier(state.difficultyMultiplier);
+  }
+
+  function showStartScreen() {
+    startScreen.style.display = "flex";
+    scenarioContainer.style.display = "none";
+    restartBtn.style.display = "none";
+    panelTitleLabel.textContent = "Setup";
+    panelSubtitleLabel.textContent =
+      "Choose your class size. Learning and likability both start at 50 / 100.";
+    endScreen.style.display = "none";
+    updateScenarioImage(null);
+    updateDecisionImage(null);
+  }
+
+  function showScenarioScreen() {
+    startScreen.style.display = "none";
+    scenarioContainer.style.display = "block";
+    restartBtn.style.display = "inline-block";
+    panelTitleLabel.textContent = "Live Scenario";
+    panelSubtitleLabel.textContent =
+      "The AI generates a situation. You decide what to do.";
+    endScreen.style.display = "none";
+  }
+
+  function showEndScreen() {
+    endScreen.style.display = "flex";
+    panelTitleLabel.textContent = "Year Complete";
+    panelSubtitleLabel.textContent = "See how you did, then try a new year.";
+    feedbackText.textContent = "Year finished. Check your report card on the right.";
+    feedbackText.classList.remove("error-text");
+  }
+
+  function computeFinalRank() {
+    const l = state.learningScore;
+    const r = state.likabilityScore;
+    const enrollRatio = state.studentsRemaining / state.classSize;
+
+    let rank = "";
+    let blurb = "";
+
+    if (l >= 85 && r >= 85 && enrollRatio >= 0.95) {
+      rank = "🟢 Hillview Legend";
+      blurb =
+        "Students learned a ton, almost nobody left your class, and parents talk about you in the good way at soccer games.";
+    } else if (l >= 80 && r >= 75 && enrollRatio >= 0.9) {
+      rank = "🟢 High-Impact Teacher";
+      blurb =
+        "You’re demanding and fair. Kids might complain a bit, but the results and relationships are strong.";
+    } else if (l >= 70 && r >= 65 && enrollRatio >= 0.85) {
+      rank = "🟡 Solid & Growing";
+      blurb =
+        "Lots went right. A few decisions cost you, but you’re close to elite with some tweaks.";
+    } else if (l >= 60 && r >= 55 && enrollRatio >= 0.75) {
+      rank = "🟡 Survived the Year";
+      blurb =
+        "Pretty realistic middle school energy. Wins, losses, a lot of learning—some of it yours.";
+    } else if (l >= 45 || r >= 45 || enrollRatio >= 0.6) {
+      rank = "🟠 Chaotic Neutral Teacher";
+      blurb =
+        "Memorable for sure. Some students thrived, others transferred. Plenty of stories, mixed outcomes.";
+    } else {
+      rank = "🔴 Walking Content for Teacher TikTok";
+      blurb =
+        "Admin, families, and students would all have opinions. On the plus side, you can immediately replay with no HR meeting.";
     }
 
-    function formatTrend(delta) {
-      if (delta > 12) return `Last move: ▲ huge gain (+${delta})`;
-      if (delta > 5) return `Last move: ▲ strong gain (+${delta})`;
-      if (delta > 0) return `Last move: ▲ small gain (+${delta})`;
-      if (delta === 0) return "Last move: ▬ no major change";
-      if (delta < -12) return `Last move: ▼ huge drop (${delta})`;
-      if (delta < -5) return `Last move: ▼ strong drop (${delta})`;
-      return `Last move: ▼ small drop (${delta})`;
-    }
+    return { rank, blurb };
+  }
 
-    function formatStudentTrend(delta) {
-      if (delta > 2) return `Enrollment spike: +${delta} students joined.`;
-      if (delta > 0) return `Small gain: +${delta} student joined.`;
-      if (delta === 0) return "No enrollment change.";
-      if (delta < -2) return `${-delta} students left your class. Rough month.`;
-      return `${-delta} student left your class.`;
-    }
+  function renderEndScreen() {
+    const { rank, blurb } = computeFinalRank();
 
-    function appendLogEntry(entry) {
-      const div = document.createElement("div");
-      div.className = "log-item";
-      div.innerHTML = `<strong>${entry.monthLabel}:</strong> ${entry.headline}`;
-      logContainer.appendChild(div);
-      logContainer.scrollTop = logContainer.scrollHeight;
-    }
+    endRank.textContent = rank;
+    endMetrics.innerHTML = `
+      <span>Learning: <strong>${state.learningScore}</strong> / 100</span>
+      <span>Likability: <strong>${state.likabilityScore}</strong> / 100</span>
+      <span>Students remaining: <strong>${state.studentsRemaining}</strong> (started with ${state.classSize})</span>
+    `;
 
-    // ===============================
-    // UI updates
-    // ===============================
-    function updateStatsUI() {
-      learningValue.textContent = `${state.learningScore} / 100`;
-      likabilityValue.textContent = `${state.likabilityScore} / 100`;
+    const diffLabel = difficultyLabelFromMultiplier(state.difficultyMultiplier);
+    endFootnote.textContent =
+      `${blurb} You played on ${diffLabel.replace("Difficulty: ", "").toLowerCase()} with ${state.classSize} starting students.`;
 
-      learningBar.style.width = `${(state.learningScore / 100) * 100}%`;
-      likabilityBar.style.width = `${(state.likabilityScore / 100) * 100}%`;
+    showEndScreen();
+  }
 
-      if (state.round === 0) {
-        learningTrend.textContent = "Game not started yet.";
-        likabilityTrend.textContent = "Game not started yet.";
-        studentsTrend.textContent = "No changes yet.";
-      } else {
-        learningTrend.textContent = formatTrend(state.lastLearningDelta);
-        likabilityTrend.textContent = formatTrend(state.lastLikabilityDelta);
-        studentsTrend.textContent = formatStudentTrend(state.lastStudentsDelta);
-      }
+  // ===============================
+  // API calls
+  // ===============================
+  async function fetchScenarioForCurrentMonth() {
+    const month = MONTHS[state.round - 1];
+    scenarioTextEl.textContent =
+      "Asking the AI to come up with a new Hillview situation for this month…";
+    optionsContainer.innerHTML = "";
+    customInput.value = "";
+    feedbackText.textContent = "The AI is thinking about your classroom…";
+    feedbackText.classList.remove("error-text");
+    submitBtn.disabled = true;
+    updateScenarioImage(null);
 
-      studentsValue.textContent = state.studentsRemaining;
-      studentsCapNote.textContent = `Started with ${state.classSize}. Max so far: ${state.maxStudents}.`;
-
-      progressValue.textContent = `${state.round} / ${state.maxRounds}`;
-      if (state.round > 0 && state.round <= state.maxRounds) {
-        roundMiniLabel.textContent = `${MONTHS[state.round - 1]} (${state.round} of ${state.maxRounds})`;
-      } else {
-        roundMiniLabel.textContent = "No month yet";
-      }
-
-      difficultyLabel.textContent = difficultyLabelFromMultiplier(state.difficultyMultiplier);
-    }
-
-    function showStartScreen() {
-      startScreen.style.display = "flex";
-      scenarioContainer.style.display = "none";
-      restartBtn.style.display = "none";
-      panelTitleLabel.textContent = "Setup";
-      panelSubtitleLabel.textContent =
-        "Choose your class size. Learning and likability both start at 50 / 100.";
-      endScreen.style.display = "none";
-    }
-
-    function showScenarioScreen() {
-      startScreen.style.display = "none";
-      scenarioContainer.style.display = "block";
-      restartBtn.style.display = "inline-block";
-      panelTitleLabel.textContent = "Live Scenario";
-      panelSubtitleLabel.textContent =
-        "The AI generates a situation. You decide what to do.";
-      endScreen.style.display = "none";
-    }
-
-    function showEndScreen() {
-      endScreen.style.display = "flex";
-      panelTitleLabel.textContent = "Year Complete";
-      panelSubtitleLabel.textContent = "See how you did, then try a new year.";
-      feedbackText.textContent = "Year finished. Check your report card on the right.";
-      feedbackText.classList.remove("error-text");
-    }
-
-    function computeFinalRank() {
-      const l = state.learningScore;
-      const r = state.likabilityScore;
-      const enrollRatio = state.studentsRemaining / state.classSize;
-
-      let rank = "";
-      let blurb = "";
-
-      if (l >= 85 && r >= 85 && enrollRatio >= 0.95) {
-        rank = "🟢 Hillview Legend";
-        blurb =
-          "Students learned a ton, almost nobody left your class, and parents talk about you in the good way at soccer games.";
-      } else if (l >= 80 && r >= 75 && enrollRatio >= 0.9) {
-        rank = "🟢 High-Impact Teacher";
-        blurb =
-          "You’re demanding and fair. Kids might complain a bit, but the results and relationships are strong.";
-      } else if (l >= 70 && r >= 65 && enrollRatio >= 0.85) {
-        rank = "🟡 Solid & Growing";
-        blurb =
-          "Lots went right. A few decisions cost you, but you’re close to elite with some tweaks.";
-      } else if (l >= 60 && r >= 55 && enrollRatio >= 0.75) {
-        rank = "🟡 Survived the Year";
-        blurb =
-          "Pretty realistic middle school energy. Wins, losses, a lot of learning—some of it yours.";
-      } else if (l >= 45 || r >= 45 || enrollRatio >= 0.6) {
-        rank = "🟠 Chaotic Neutral Teacher";
-        blurb =
-          "Memorable for sure. Some students thrived, others transferred. Plenty of stories, mixed outcomes.";
-      } else {
-        rank = "🔴 Walking Content for Teacher TikTok";
-        blurb =
-          "Admin, families, and students would all have opinions. On the plus side, you can immediately replay with no HR meeting.";
-      }
-
-      return { rank, blurb };
-    }
-
-    function renderEndScreen() {
-      const { rank, blurb } = computeFinalRank();
-
-      endRank.textContent = rank;
-      endMetrics.innerHTML = `
-        <span>Learning: <strong>${state.learningScore}</strong> / 100</span>
-        <span>Likability: <strong>${state.likabilityScore}</strong> / 100</span>
-        <span>Students remaining: <strong>${state.studentsRemaining}</strong> (started with ${state.classSize})</span>
-      `;
-
-      const diffLabel = difficultyLabelFromMultiplier(state.difficultyMultiplier);
-      endFootnote.textContent =
-        `${blurb} You played on ${diffLabel.replace("Difficulty: ", "").toLowerCase()} with ${state.classSize} starting students.`;
-
-      showEndScreen();
-    }
-
-    // ===============================
-    // API calls
-    // ===============================
-    async function fetchScenarioForCurrentMonth() {
-      const month = MONTHS[state.round - 1];
-      scenarioTextEl.textContent =
-        "Asking the AI to come up with a new Hillview situation for this month…";
-      optionsContainer.innerHTML = "";
-      customInput.value = "";
-      feedbackText.textContent = "The AI is thinking about your classroom…";
-      feedbackText.classList.remove("error-text");
-      submitBtn.disabled = true;
-
-      try {
-        const res = await fetch(`${API_BASE}/scenario`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            month,
-            round: state.round,
-            stats: {
-              learningScore: state.learningScore,
-              likabilityScore: state.likabilityScore,
-              studentsRemaining: state.studentsRemaining,
-              classSize: state.classSize
-            },
-            usedScenarioIds: state.usedScenarioIds
-          })
-        });
-
-        if (!res.ok) throw new Error("Scenario API error");
-        const data = await res.json();
-
-        state.currentScenario = {
-          id: data.id,
-          title: data.title || month,
-          prompt: data.prompt,
-          options: Array.isArray(data.options) ? data.options : []
-        };
-
-        if (data.id && !state.usedScenarioIds.includes(data.id)) {
-          state.usedScenarioIds.push(data.id);
-        }
-
-        renderScenario();
-      } catch (err) {
-        console.error(err);
-        scenarioTextEl.textContent =
-          "The AI couldn't be reached right now. Try again in a bit, or reload the page.";
-        optionsContainer.innerHTML = "";
-      } finally {
-        submitBtn.disabled = false;
-      }
-    }
-
-    async function callEvaluateAPI(choicePayload) {
-      const month = MONTHS[state.round - 1];
-
-      const res = await fetch(`${API_BASE}/evaluate`, {
+    try {
+      const res = await fetch(`${API_BASE}/scenario`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          scenarioId: state.currentScenario.id,
           month,
           round: state.round,
-          classSize: state.classSize,
           stats: {
             learningScore: state.learningScore,
             likabilityScore: state.likabilityScore,
-            studentsRemaining: state.studentsRemaining
+            studentsRemaining: state.studentsRemaining,
+            classSize: state.classSize
           },
-          choice: choicePayload
+          usedScenarioIds: state.usedScenarioIds
         })
       });
 
-      if (!res.ok) throw new Error("Evaluate API error");
-      return res.json();
-    }
+      if (!res.ok) throw new Error("Scenario API error");
+      const data = await res.json();
 
-    // ===============================
-    // Scenario render
-    // ===============================
-    function renderScenario() {
-      const scenario = state.currentScenario;
-      if (!scenario) return;
+      state.currentScenario = {
+        id: data.id,
+        title: data.title || month,
+        prompt: data.prompt,
+        options: Array.isArray(data.options) ? data.options : [],
+        imageUrl: data.imageUrl || null
+      };
 
-      const monthLabel = MONTHS[state.round - 1] || `Month ${state.round}`;
-      roundLabel.textContent = `${monthLabel} · ${state.round} of ${state.maxRounds}`;
+      if (data.id && !state.usedScenarioIds.includes(data.id)) {
+        state.usedScenarioIds.push(data.id);
+      }
+
+      renderScenario();
+    } catch (err) {
+      console.error(err);
       scenarioTextEl.textContent =
-        scenario.prompt || "The AI forgot to send a prompt. Oops.";
-
+        "The AI couldn't be reached right now. Try again in a bit, or reload the page.";
       optionsContainer.innerHTML = "";
-      (scenario.options || []).forEach((opt, index) => {
-        const btn = document.createElement("button");
-        btn.className = "option-btn";
-        btn.textContent = opt.text;
-        btn.dataset.optionId = opt.id || `opt-${index + 1}`;
-        btn.addEventListener("click", () => {
-          document.querySelectorAll(".option-btn").forEach(b => b.classList.remove("selected"));
-          btn.classList.add("selected");
-          feedbackText.textContent =
-            "Option selected. You can still edit or replace it with your own written response.";
-          feedbackText.classList.remove("error-text");
-        });
-        optionsContainer.appendChild(btn);
-      });
-
-      customInput.value = "";
-      feedbackText.textContent = "Pick an option or write your own response.";
-      feedbackText.classList.remove("error-text");
-
-      state.awaitingNextMonth = false;
-      submitBtn.textContent = "Submit & see outcome";
+      updateScenarioImage(null);
+    } finally {
+      submitBtn.disabled = false;
     }
+  }
 
-    // ===============================
-    // Game lifecycle
-    // ===============================
-    function resetGame() {
-      state.classSize = parseInt(classSizeSelect.value, 10) || 22;
-      state.studentsRemaining = state.classSize;
-      state.maxStudents = state.classSize;
-      state.difficultyMultiplier = computeDifficultyFromClassSize(state.classSize);
-      state.round = 0;
-      state.learningScore = SCORE_START;
-      state.likabilityScore = SCORE_START;
-      state.lastLearningDelta = 0;
-      state.lastLikabilityDelta = 0;
-      state.lastStudentsDelta = 0;
-      state.history = [];
-      state.currentScenario = null;
-      state.usedScenarioIds = [];
-      state.awaitingNextMonth = false;
+  async function callEvaluateAPI(choicePayload) {
+    const month = MONTHS[state.round - 1];
 
-      classMetaText.textContent = `${state.classSize} students · ${difficultyLabelFromMultiplier(
-        state.difficultyMultiplier
-      ).replace("Difficulty: ", "")}`;
-      logContainer.innerHTML = "";
-      updateStatsUI();
-      showStartScreen();
-    }
-
-    function startYear() {
-      state.classSize = parseInt(classSizeSelect.value, 10) || 22;
-      state.studentsRemaining = state.classSize;
-      state.maxStudents = state.classSize;
-      state.difficultyMultiplier = computeDifficultyFromClassSize(state.classSize);
-      state.round = 0;
-      state.learningScore = SCORE_START;
-      state.likabilityScore = SCORE_START;
-      state.lastLearningDelta = 0;
-      state.lastLikabilityDelta = 0;
-      state.lastStudentsDelta = 0;
-      state.history = [];
-      state.currentScenario = null;
-      state.usedScenarioIds = [];
-      state.awaitingNextMonth = false;
-
-      classMetaText.textContent = `${state.classSize} students · ${difficultyLabelFromMultiplier(
-        state.difficultyMultiplier
-      ).replace("Difficulty: ", "")}`;
-
-      logContainer.innerHTML = "";
-      appendLogEntry({
-        monthLabel: "Setup",
-        headline: `New year: ${state.classSize} students. Learning and likability start at 50 / 100.`
-      });
-
-      nextRound();
-      showScenarioScreen();
-      updateStatsUI();
-    }
-
-    function nextRound() {
-      state.round += 1;
-      if (state.round > state.maxRounds) {
-        renderEndScreen();
-        return;
-      }
-      fetchScenarioForCurrentMonth();
-      updateStatsUI();
-    }
-
-    // ===============================
-    // Submit flow
-    // ===============================
-    async function handleSubmitClick() {
-      if (!state.currentScenario) return;
-
-      if (!state.awaitingNextMonth) {
-        const selectedBtn = document.querySelector(".option-btn.selected");
-        const rawCustom = customInput.value.trim();
-
-        let choicePayload;
-        if (rawCustom) {
-          choicePayload = { type: "custom", customText: rawCustom };
-        } else if (selectedBtn && selectedBtn.dataset.optionId) {
-          choicePayload = { type: "option", optionId: selectedBtn.dataset.optionId };
-        } else {
-          feedbackText.textContent =
-            "Pick an option or write your own response before submitting.";
-          feedbackText.classList.add("error-text");
-          return;
-        }
-
-        submitBtn.disabled = true;
-        feedbackText.classList.remove("error-text");
-        feedbackText.textContent =
-          "The AI is grading your move and updating your class…";
-
-        try {
-          const result = await callEvaluateAPI(choicePayload);
-
-          // Update scores
-          state.learningScore = clamp(
-            state.learningScore + (result.learningDelta || 0),
-            SCORE_MIN,
-            SCORE_MAX
-          );
-          state.likabilityScore = clamp(
-            state.likabilityScore + (result.likabilityDelta || 0),
-            SCORE_MIN,
-            SCORE_MAX
-          );
-          state.lastLearningDelta = result.learningDelta || 0;
-          state.lastLikabilityDelta = result.likabilityDelta || 0;
-
-          // Students
-          const deltaStudents = result.studentsDelta || 0;
-          const newStudents = clamp(
-            state.studentsRemaining + deltaStudents,
-            0,
-            state.classSize + 10
-          );
-          state.lastStudentsDelta = newStudents - state.studentsRemaining;
-          state.studentsRemaining = newStudents;
-          state.maxStudents = Math.max(state.maxStudents, state.studentsRemaining);
-
-          const monthLabel = MONTHS[state.round - 1] || `Month ${state.round}`;
-          const commentary =
-            result.commentary || "The AI forgot to explain this decision.";
-          const headline =
-            result.logHeadline ||
-            `Learning ${state.lastLearningDelta >= 0 ? "+" : ""}${state.lastLearningDelta}, ` +
-              `Likability ${state.lastLikabilityDelta >= 0 ? "+" : ""}${state.lastLikabilityDelta}, ` +
-              `Students ${state.lastStudentsDelta >= 0 ? "+" : ""}${state.lastStudentsDelta}.`;
-
-          state.history.push({
-            round: state.round,
-            monthLabel,
-            scenarioId: state.currentScenario.id,
-            choicePayload,
-            learningDelta: state.lastLearningDelta,
-            likabilityDelta: state.lastLikabilityDelta,
-            studentsDelta: state.lastStudentsDelta,
-            commentary
-          });
-
-          appendLogEntry({ monthLabel, headline });
-          feedbackText.textContent = commentary;
-          feedbackText.classList.remove("error-text");
-
-          updateStatsUI();
-
-          state.awaitingNextMonth = true;
-          submitBtn.textContent =
-            state.round >= state.maxRounds ? "See final report" : "Go to next month";
-        } catch (err) {
-          console.error(err);
-          feedbackText.textContent =
-            "The AI couldn't grade that move right now. Try again or reload the page.";
-          feedbackText.classList.add("error-text");
-        } finally {
-          submitBtn.disabled = false;
-        }
-      } else {
-        state.awaitingNextMonth = false;
-        submitBtn.textContent = "Submit & see outcome";
-
-        if (state.round >= state.maxRounds) {
-          renderEndScreen();
-        } else {
-          nextRound();
-        }
-      }
-    }
-
-    // ===============================
-    // Events
-    // ===============================
-    startBtn.addEventListener("click", startYear);
-    restartBtn.addEventListener("click", resetGame);
-    submitBtn.addEventListener("click", handleSubmitClick);
-    playAgainBtn.addEventListener("click", startYear);
-
-    classSizeSelect.addEventListener("change", () => {
-      const previewSize = parseInt(classSizeSelect.value, 10) || 22;
-      const previewDiff = computeDifficultyFromClassSize(previewSize);
-      classMetaText.textContent = `${previewSize} students · ${difficultyLabelFromMultiplier(previewDiff)
-        .replace("Difficulty: ", "")}`;
+    const res = await fetch(`${API_BASE}/evaluate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        scenarioId: state.currentScenario.id,
+        month,
+        round: state.round,
+        classSize: state.classSize,
+        stats: {
+          learningScore: state.learningScore,
+          likabilityScore: state.likabilityScore,
+          studentsRemaining: state.studentsRemaining
+        },
+        choice: choicePayload
+      })
     });
 
-    // Init
-    resetGame();
-  </script>
-  </body>
+    if (!res.ok) throw new Error("Evaluate API error");
+    return res.json();
+  }
+
+  // ===============================
+  // Scenario render
+  // ===============================
+  function renderScenario() {
+    const scenario = state.currentScenario;
+    if (!scenario) return;
+
+    const monthLabel = MONTHS[state.round - 1] || `Month ${state.round}`;
+    roundLabel.textContent = `${monthLabel} · ${state.round} of ${state.maxRounds}`;
+    scenarioTextEl.textContent =
+      scenario.prompt || "The AI forgot to send a prompt. Oops.";
+
+    updateScenarioImage(scenario.imageUrl || null);
+    updateDecisionImage(null);
+
+    optionsContainer.innerHTML = "";
+    (scenario.options || []).forEach((opt, index) => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.textContent = opt.text;
+      btn.dataset.optionId = opt.id || `opt-${index + 1}`;
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".option-btn").forEach(b =>
+          b.classList.remove("selected")
+        );
+        btn.classList.add("selected");
+        feedbackText.textContent =
+          "Option selected. You can still edit or replace it with your own written response.";
+        feedbackText.classList.remove("error-text");
+      });
+      optionsContainer.appendChild(btn);
+    });
+
+    customInput.value = "";
+    feedbackText.textContent = "Pick an option or write your own response.";
+    feedbackText.classList.remove("error-text");
+
+    state.awaitingNextMonth = false;
+    submitBtn.textContent = "Submit & see outcome";
+  }
+
+  // ===============================
+  // Game lifecycle
+  // ===============================
+  function resetGame() {
+    state.classSize = parseInt(classSizeSelect.value, 10) || 22;
+    state.studentsRemaining = state.classSize;
+    state.maxStudents = state.classSize;
+    state.difficultyMultiplier = computeDifficultyFromClassSize(state.classSize);
+    state.round = 0;
+    state.learningScore = SCORE_START;
+    state.likabilityScore = SCORE_START;
+    state.lastLearningDelta = 0;
+    state.lastLikabilityDelta = 0;
+    state.lastStudentsDelta = 0;
+    state.history = [];
+    state.currentScenario = null;
+    state.usedScenarioIds = [];
+    state.awaitingNextMonth = false;
+
+    classMetaText.textContent = `${state.classSize} students · ${difficultyLabelFromMultiplier(
+      state.difficultyMultiplier
+    ).replace("Difficulty: ", "")}`;
+    logContainer.innerHTML = "";
+    updateStatsUI();
+    showStartScreen();
+  }
+
+  function startYear() {
+    state.classSize = parseInt(classSizeSelect.value, 10) || 22;
+    state.studentsRemaining = state.classSize;
+    state.maxStudents = state.classSize;
+    state.difficultyMultiplier = computeDifficultyFromClassSize(state.classSize);
+    state.round = 0;
+    state.learningScore = SCORE_START;
+    state.likabilityScore = SCORE_START;
+    state.lastLearningDelta = 0;
+    state.lastLikabilityDelta = 0;
+    state.lastStudentsDelta = 0;
+    state.history = [];
+    state.currentScenario = null;
+    state.usedScenarioIds = [];
+    state.awaitingNextMonth = false;
+
+    classMetaText.textContent = `${state.classSize} students · ${difficultyLabelFromMultiplier(
+      state.difficultyMultiplier
+    ).replace("Difficulty: ", "")}`;
+
+    logContainer.innerHTML = "";
+    appendLogEntry({
+      monthLabel: "Setup",
+      headline: `New year: ${state.classSize} students. Learning and likability start at 50 / 100.`
+    });
+
+    nextRound();
+    showScenarioScreen();
+    updateStatsUI();
+  }
+
+  function nextRound() {
+    state.round += 1;
+    if (state.round > state.maxRounds) {
+      renderEndScreen();
+      return;
+    }
+    fetchScenarioForCurrentMonth();
+    updateStatsUI();
+  }
+
+  // ===============================
+  // Submit flow
+  // ===============================
+  async function handleSubmitClick() {
+    if (!state.currentScenario) return;
+
+    if (!state.awaitingNextMonth) {
+      const selectedBtn = document.querySelector(".option-btn.selected");
+      const rawCustom = customInput.value.trim();
+
+      let choicePayload;
+      if (rawCustom) {
+        choicePayload = { type: "custom", customText: rawCustom };
+      } else if (selectedBtn && selectedBtn.dataset.optionId) {
+        choicePayload = { type: "option", optionId: selectedBtn.dataset.optionId };
+      } else {
+        feedbackText.textContent =
+          "Pick an option or write your own response before submitting.";
+        feedbackText.classList.add("error-text");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      feedbackText.classList.remove("error-text");
+      feedbackText.textContent =
+        "The AI is grading your move and updating your class…";
+
+      try {
+        const result = await callEvaluateAPI(choicePayload);
+
+        // Update scores
+        state.learningScore = clamp(
+          state.learningScore + (result.learningDelta || 0),
+          SCORE_MIN,
+          SCORE_MAX
+        );
+        state.likabilityScore = clamp(
+          state.likabilityScore + (result.likabilityDelta || 0),
+          SCORE_MIN,
+          SCORE_MAX
+        );
+        state.lastLearningDelta = result.learningDelta || 0;
+        state.lastLikabilityDelta = result.likabilityDelta || 0;
+
+        // Students
+        const deltaStudents = result.studentsDelta || 0;
+        const newStudents = clamp(
+          state.studentsRemaining + deltaStudents,
+          0,
+          state.classSize + 10
+        );
+        state.lastStudentsDelta = newStudents - state.studentsRemaining;
+        state.studentsRemaining = newStudents;
+        state.maxStudents = Math.max(state.maxStudents, state.studentsRemaining);
+
+        const monthLabel = MONTHS[state.round - 1] || `Month ${state.round}`;
+        const commentary =
+          result.commentary || "The AI forgot to explain this decision.";
+        const headline =
+          result.logHeadline ||
+          `Learning ${state.lastLearningDelta >= 0 ? "+" : ""}${state.lastLearningDelta}, ` +
+            `Likability ${state.lastLikabilityDelta >= 0 ? "+" : ""}${state.lastLikabilityDelta}, ` +
+            `Students ${state.lastStudentsDelta >= 0 ? "+" : ""}${state.lastStudentsDelta}.`;
+
+        state.history.push({
+          round: state.round,
+          monthLabel,
+          scenarioId: state.currentScenario.id,
+          choicePayload,
+          learningDelta: state.lastLearningDelta,
+          likabilityDelta: state.lastLikabilityDelta,
+          studentsDelta: state.lastStudentsDelta,
+          commentary
+        });
+
+        appendLogEntry({ monthLabel, headline });
+        feedbackText.textContent = commentary;
+        feedbackText.classList.remove("error-text");
+
+        // show decision image if backend sent one
+        updateDecisionImage(result.decisionImageUrl || null);
+
+        updateStatsUI();
+
+        state.awaitingNextMonth = true;
+        submitBtn.textContent =
+          state.round >= state.maxRounds ? "See final report" : "Go to next month";
+      } catch (err) {
+        console.error(err);
+        feedbackText.textContent =
+          "The AI couldn't grade that move right now. Try again or reload the page.";
+        feedbackText.classList.add("error-text");
+      } finally {
+        submitBtn.disabled = false;
+      }
+    } else {
+      state.awaitingNextMonth = false;
+      submitBtn.textContent = "Submit & see outcome";
+
+      if (state.round >= state.maxRounds) {
+        renderEndScreen();
+      } else {
+        nextRound();
+      }
+    }
+  }
+
+  // ===============================
+  // Events
+  // ===============================
+  startBtn.addEventListener("click", startYear);
+  restartBtn.addEventListener("click", resetGame);
+  submitBtn.addEventListener("click", handleSubmitClick);
+  playAgainBtn.addEventListener("click", startYear);
+
+  classSizeSelect.addEventListener("change", () => {
+    const previewSize = parseInt(classSizeSelect.value, 10) || 22;
+    const previewDiff = computeDifficultyFromClassSize(previewSize);
+    classMetaText.textContent = `${previewSize} students · ${difficultyLabelFromMultiplier(
+      previewDiff
+    ).replace("Difficulty: ", "")}`;
+  });
+
+  // Init
+  resetGame();
+</script>  </body>
 </html>
