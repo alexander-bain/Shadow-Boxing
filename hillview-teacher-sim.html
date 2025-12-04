@@ -22,10 +22,15 @@
       --card-bg: #020617;
       --card-border: rgba(148, 163, 184, 0.5);
       --accent: #22c55e;
-      --accent-soft: rgba(34, 197, 94, 0.18);
-      --text: #f9fafb;
-      --muted: #9ca3af;
+      --accent-soft: rgba(34, 197, 94, 0.12);
       --danger: #f97373;
+      --danger-soft: rgba(248, 113, 113, 0.12);
+      --muted: #6b7280;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.9);
+      --radius-lg: 1.5rem;
+      --radius-md: 1rem;
     }
 
     * {
@@ -35,27 +40,23 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top left, #1e293b 0, transparent 55%),
-        radial-gradient(circle at top right, #111827 0, transparent 60%),
-        var(--bg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #0b1120, #020617 50%, #000);
       color: var(--text);
       display: flex;
+      align-items: stretch;
       justify-content: center;
       padding: 16px;
     }
 
-    .app {
-      max-width: 960px;
+    .app-shell {
       width: 100%;
-      background: rgba(2, 6, 23, 0.98);
-      border-radius: 24px;
-      padding: 20px 18px 18px;
-      box-shadow:
-        0 22px 45px rgba(0, 0, 0, 0.7),
-        0 0 0 1px rgba(148, 163, 184, 0.22);
-      backdrop-filter: blur(18px);
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
     header {
@@ -63,144 +64,244 @@
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      margin-bottom: 16px;
+      padding: 16px 20px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(
+        135deg,
+        rgba(30, 64, 175, 0.45),
+        rgba(17, 24, 39, 0.98)
+      );
+      border: 1px solid rgba(129, 140, 248, 0.5);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(20px);
     }
 
-    .title-group h1 {
-      margin: 0;
-      font-size: 1.6rem;
-    }
-
-    .title-group p {
-      margin: 3px 0 0;
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .badge {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      border-radius: 999px;
-      padding: 4px 10px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      color: var(--muted);
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.15fr);
-      gap: 16px;
-    }
-
-    .panel {
-      background: var(--card-bg);
-      border-radius: 18px;
-      border: 1px solid var(--card-border);
-      padding: 13px 13px 12px;
-    }
-
-    .panel-header {
+    header .title-block {
       display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-
-    .panel-title {
-      font-size: 0.9rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .panel-subtitle {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-
-    .start-screen {
-      display: flex;
-      gap: 16px;
       flex-direction: column;
+      gap: 4px;
     }
 
-    .start-row {
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      letter-spacing: 0.03em;
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
       align-items: center;
+      gap: 8px;
     }
 
-    label {
-      font-size: 0.82rem;
-      color: var(--muted);
-    }
-
-    select {
-      background: #020617;
+    header h1 span.badge {
+      font-size: 0.75rem;
+      padding: 3px 8px;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      padding: 6px 10px;
-      color: var(--text);
+      border: 1px solid rgba(191, 219, 254, 0.4);
+      background: rgba(15, 23, 42, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #bfdbfe;
+    }
+
+    header p {
+      margin: 0;
       font-size: 0.9rem;
-      outline: none;
+      color: var(--text-soft);
     }
 
-    select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.6);
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.8rem;
+      color: var(--text-soft);
     }
 
-    .primary-btn {
+    .chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
       display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 6px;
+      white-space: nowrap;
+    }
+
+    .chip-dot {
+      width: 8px;
+      height: 8px;
       border-radius: 999px;
-      border: none;
-      padding: 8px 16px;
-      font-weight: 600;
-      font-size: 0.87rem;
-      cursor: pointer;
-      background: linear-gradient(135deg, var(--accent), #16a34a);
-      color: #01110a;
-      box-shadow: 0 14px 26px rgba(34, 197, 94, 0.45);
-      transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25);
     }
 
-    .primary-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 18px 34px rgba(34, 197, 94, 0.55);
+    main.layout {
+      display: grid;
+      grid-template-columns: minmax(0, 270px) minmax(0, 1.5fr) minmax(0, 280px);
+      gap: 16px;
     }
 
-    .primary-btn:active {
-      transform: translateY(0);
-      box-shadow: 0 10px 18px rgba(34, 197, 94, 0.4);
+    @media (max-width: 960px) {
+      main.layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
     }
 
-    .primary-btn[disabled] {
-      opacity: 0.5;
-      cursor: default;
-      transform: none;
-      box-shadow: none;
+    .card {
+      background: radial-gradient(circle at top left, #0b1120, #020617 55%);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.8);
+      position: relative;
+      overflow: hidden;
     }
 
-    .muted-btn {
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      opacity: 0.07;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.4), transparent 60%),
+        radial-gradient(circle at 100% 0%, rgba(129, 140, 248, 0.45), transparent 55%);
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #a5b4fc;
+    }
+
+    .card h3 {
+      margin: 0 0 6px;
+      font-size: 0.92rem;
+      color: #e5e7eb;
+    }
+
+    .card small {
+      color: var(--text-soft);
+      font-size: 0.8rem;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .pill {
+      padding: 3px 9px;
+      font-size: 0.75rem;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      padding: 5px 10px;
-      font-size: 0.78rem;
-      background: transparent;
-      color: var(--muted);
-      cursor: pointer;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      color: var(--text-soft);
+      background: rgba(15, 23, 42, 0.9);
     }
 
-    .scenario-body {
+    .month-label {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+
+    .progress-bar-shell {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      overflow: hidden;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      margin-bottom: 12px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #22c55e, #a3e635);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .stat-grid {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .stat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.85rem;
+    }
+
+    .stat-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-soft);
+    }
+
+    .stat-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+    }
+
+    .stat-dot.learning { background: #38bdf8; }
+    .stat-dot.likability { background: #f97316; }
+    .stat-dot.enrollment { background: #22c55e; }
+
+    .stat-meter-shell {
+      flex: 1;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      overflow: hidden;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+    }
+
+    .stat-meter-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(148, 163, 184, 0.8), #e5e7eb);
+      width: 50%;
+      transition: width 0.3s ease;
+    }
+
+    .stat-value {
+      width: 38px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-size: 0.82rem;
+      color: #e5e7eb;
+    }
+
+    .score-summary {
+      margin-top: 10px;
+      padding: 9px 10px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px dashed rgba(148, 163, 184, 0.8);
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .score-summary strong {
+      color: #e5e7eb;
     }
 
     .scenario-meta {
@@ -208,1025 +309,1266 @@
       justify-content: space-between;
       align-items: baseline;
       gap: 8px;
-      font-size: 0.78rem;
-      color: var(--muted);
+      margin-bottom: 8px;
     }
 
-    .pill-soft {
-      display: inline-flex;
-      align-items: center;
+    .scenario-month {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #a5b4fc;
+    }
+
+    .scenario-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+
+    .scenario-tags {
+      display: flex;
+      flex-wrap: wrap;
       gap: 6px;
-      padding: 3px 9px;
+      margin-bottom: 8px;
+    }
+
+    .scenario-tag {
+      font-size: 0.7rem;
+      padding: 3px 8px;
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(15, 23, 42, 0.9);
-      font-size: 0.75rem;
-      color: var(--muted);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-soft);
     }
 
     .scenario-text {
       font-size: 0.9rem;
       line-height: 1.5;
-      padding: 10px 10px 8px;
-      border-radius: 14px;
-      background: radial-gradient(circle at top left, #0b1120, #020617);
-      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #d1d5db;
+      margin-bottom: 12px;
+      white-space: pre-line;
     }
 
-    .options {
-      margin-top: 4px;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 6px;
-    }
-
-    .option-btn {
-      width: 100%;
-      text-align: left;
-      border-radius: 12px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(15, 23, 42, 0.92);
-      padding: 7px 9px;
-      font-size: 0.87rem;
-      color: #e5e7eb;
-      cursor: pointer;
-      transition: background 0.09s ease-out, transform 0.05s ease-out, box-shadow 0.09s ease-out, border-color 0.09s ease-out;
-    }
-
-    .option-btn:hover {
-      background: rgba(30, 64, 175, 0.55);
-      box-shadow: 0 8px 16px rgba(30, 64, 175, 0.45);
-    }
-
-    .option-btn.selected {
-      border-color: var(--accent);
-      background: radial-gradient(circle at top left, var(--accent-soft), rgba(15, 23, 42, 0.98));
-      box-shadow: 0 10px 18px rgba(34, 197, 94, 0.35);
-    }
-
-    .custom-response {
-      margin-top: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .custom-response textarea {
-      resize: vertical;
-      min-height: 60px;
-      max-height: 160px;
-      border-radius: 12px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: #020617;
-      color: var(--text);
-      padding: 8px 9px;
-      font-size: 0.85rem;
-      outline: none;
-    }
-
-    .custom-response textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.7);
-    }
-
-    .custom-hint {
-      font-size: 0.72rem;
-      color: var(--muted);
-    }
-
-    .scenario-footer {
-      margin-top: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .scenario-footer-left {
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-    }
-
-    .stat-block {
-      background: radial-gradient(circle at top left, #020617, #020617);
-      border-radius: 12px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      padding: 8px 9px 9px;
-      font-size: 0.78rem;
-    }
-
-    .stat-header {
+    label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-soft);
       display: flex;
       justify-content: space-between;
       align-items: baseline;
+      gap: 8px;
       margin-bottom: 4px;
-      gap: 6px;
     }
 
-    .stat-label {
-      color: var(--muted);
-      font-size: 0.78rem;
-    }
-
-    .stat-value {
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .stat-bar {
-      position: relative;
-      width: 100%;
-      height: 7px;
-      border-radius: 999px;
-      background: #020617;
-      overflow: hidden;
-    }
-
-    .stat-bar-fill {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--accent), #22c55e);
-      transition: width 0.25s ease-out;
-    }
-
-    .stat-extra {
-      margin-top: 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    label span.helper {
+      text-transform: none;
+      letter-spacing: 0;
       font-size: 0.72rem;
-      color: var(--muted);
+      color: var(--text-soft);
     }
 
-    .log {
-      margin-top: 6px;
-      max-height: 136px;
-      overflow-y: auto;
-      padding-right: 4px;
-      font-size: 0.76rem;
-      color: var(--muted);
+    textarea {
+      width: 100%;
+      min-height: 130px;
+      resize: vertical;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.98);
+      color: var(--text);
+      padding: 10px 11px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      outline: none;
+      box-shadow: inset 0 0 0 1px transparent;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
     }
 
-    .log-item {
-      margin-bottom: 4px;
+    textarea:focus {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.6),
+        0 0 40px rgba(34, 197, 94, 0.15);
+      background: rgba(15, 23, 42, 0.98);
     }
 
-    .log-item strong {
-      color: #e5e7eb;
+    textarea[disabled] {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 14px;
+      font-size: 0.88rem;
       font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(34, 197, 94, 0.12);
+      color: #bbf7d0;
+      border: 1px solid rgba(34, 197, 94, 0.7);
+      box-shadow: 0 10px 24px rgba(22, 163, 74, 0.45);
+      transition: transform 0.08s ease, box-shadow 0.08s ease,
+        background 0.08s ease, border-color 0.08s ease;
     }
 
-    .end-screen {
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      padding: 10px 9px;
-      border-radius: 14px;
-      background: radial-gradient(circle at top left, #0b1120, #020617);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      margin-top: 6px;
-      font-size: 0.85rem;
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(22, 163, 74, 0.7);
+      background: rgba(34, 197, 94, 0.16);
     }
 
-    .end-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 4px;
+    button:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 6px 18px rgba(22, 163, 74, 0.6);
     }
 
-    .end-rank {
-      font-size: 0.95rem;
-      font-weight: 600;
+    button.secondary {
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-soft);
+      border-color: rgba(148, 163, 184, 0.8);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.7);
+    }
+
+    button.secondary:hover:not(:disabled) {
+      background: rgba(15, 23, 42, 0.98);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .feedback {
+      margin-top: 10px;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      font-size: 0.8rem;
+      line-height: 1.4;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: var(--text-soft);
+    }
+
+    .feedback.good {
+      background: var(--accent-soft);
+      border-color: rgba(34, 197, 94, 0.9);
+      color: #bbf7d0;
+    }
+
+    .feedback.bad {
+      background: var(--danger-soft);
+      border-color: rgba(248, 113, 113, 0.9);
+      color: #fee2e2;
+    }
+
+    .feedback h4 {
+      margin: 0 0 4px;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .feedback ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .feedback li {
       margin-bottom: 2px;
     }
 
-    .end-metric-row {
+    .yearbook-photo-wrapper {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: #020617;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .yearbook-photo-wrapper img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 170px;
+      object-fit: cover;
+      filter: saturate(0.9) contrast(1.1);
+    }
+
+    .yearbook-caption {
+      position: absolute;
+      bottom: 4px;
+      right: 6px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-soft);
+    }
+
+    .roster-header {
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px 12px;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .roster-header span {
       font-size: 0.8rem;
+      color: var(--text-soft);
     }
 
-    .end-footnote {
-      font-size: 0.75rem;
-      color: var(--muted);
+    .roster-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      max-height: 290px;
+      overflow-y: auto;
+      padding-right: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148, 163, 184, 0.7) transparent;
     }
 
-    .error-text {
-      color: var(--danger);
-      font-size: 0.76rem;
+    .roster-list::-webkit-scrollbar {
+      width: 6px;
     }
 
-    @media (max-width: 800px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
+    .roster-list::-webkit-scrollbar-track {
+      background: transparent;
     }
 
-    @media (max-width: 600px) {
-      .app {
-        padding: 16px 12px 14px;
-        border-radius: 18px;
-      }
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .title-group h1 {
-        font-size: 1.3rem;
-      }
+    .roster-list::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.7);
+      border-radius: 999px;
+    }
+
+    .roster-item {
+      padding: 6px 6px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 4px;
+      transition: background 0.12s ease, transform 0.06s ease;
+      border: 1px solid transparent;
+    }
+
+    .roster-item.spotlight {
+      background: rgba(37, 99, 235, 0.16);
+      border-color: rgba(59, 130, 246, 0.8);
+      transform: translateX(1px);
+    }
+
+    .roster-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      font-size: 0.83rem;
+    }
+
+    .roster-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .roster-avatar {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #e5e7eb, #64748b);
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      font-size: 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #020617;
+      font-weight: 600;
+    }
+
+    .roster-mood {
+      font-size: 0.85rem;
+    }
+
+    .roster-meta {
+      display: flex;
+      gap: 8px;
+      font-size: 0.72rem;
+      color: var(--text-soft);
+    }
+
+    .roster-pill {
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+
+    .final-outcome {
+      margin-top: 10px;
+      padding: 9px 10px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      font-size: 0.82rem;
+      color: var(--text-soft);
+    }
+
+    .final-outcome strong {
+      color: #e5e7eb;
     }
   </style>
 </head>
 <body>
-  <div class="app">
+  <div class="app-shell">
     <header>
-      <div class="title-group">
-        <h1>Hillview Middle School Teacher Simulator</h1>
-        <p>August to June: 11 big moments. Can you keep learning high, stay likable, and keep your class?</p>
+      <div class="title-block">
+        <h1>
+          Hillview Teacher Simulator
+          <span class="badge">Beta</span>
+        </h1>
+        <p>
+          Make it through one chaotic middle-school year. Balance
+          <strong>learning</strong>, <strong>likability</strong>, and
+          <strong>enrollment</strong> — and no, saying “the kids love me”
+          is not a strategy.
+        </p>
       </div>
-      <div class="badge">Hillview · Menlo Park</div>
+      <div class="header-meta">
+        <div class="chip">
+          <span class="chip-dot"></span>
+          <span>Year 7B homeroom</span>
+        </div>
+        <div class="chip">
+          🎓 11 months • single player
+        </div>
+      </div>
     </header>
 
-    <div class="layout">
-      <!-- Left: Scenario / Start / End -->
-      <section class="panel" id="scenario-panel">
-        <div class="panel-header">
-          <div>
-            <div class="panel-title" id="panel-title-label">Setup</div>
-            <div class="panel-subtitle" id="panel-subtitle-label">
-              Choose your class size. Learning and likability both start at 50 / 100.
-            </div>
+    <main class="layout">
+      <!-- Left: Stats -->
+      <section class="card">
+        <div class="card-inner">
+          <h2>Year Overview</h2>
+          <div class="month-label">
+            <span id="monthLabel">Month 1 of 11 · August</span>
           </div>
-          <button class="muted-btn" id="restart-btn" style="display:none;">Restart year</button>
-        </div>
-
-        <!-- START SCREEN -->
-        <div id="start-screen" class="start-screen">
-          <div>
-            <p style="margin:0 0 8px;font-size:0.9rem;">
-              You&rsquo;re a Hillview teacher from August to June. Each month, you face one tricky moment.
-            </p>
-            <p style="margin:0;font-size:0.82rem;color:var(--muted);">
-              You track <strong>Student Learning</strong>, <strong>Likability &amp; Respect</strong>,
-              and <strong>Students Remaining in your class</strong>.
-            </p>
+          <div class="progress-bar-shell">
+            <div class="progress-bar-fill" id="yearProgress"></div>
           </div>
 
-          <div class="start-row">
-            <label for="class-size">Class size:</label>
-            <select id="class-size">
-              <option value="16">16 students (almost chill)</option>
-              <option value="22" selected>22 students (realistic)</option>
-              <option value="28">28 students (crowded)</option>
-              <option value="32">32 students (dungeon mode)</option>
-              <option value="36">36 students (why would you do this)</option>
-            </select>
-          </div>
-
-          <div class="start-row">
-            <label>School year:</label>
-            <span style="font-size:0.85rem;">11 scenarios · August through June</span>
-          </div>
-
-          <div class="start-row">
-            <button class="primary-btn" id="start-btn">
-              Start in August
-              <span>▶</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- SCENARIO + END SCREENS -->
-        <div id="scenario-container" style="display:none;">
-          <div class="scenario-body">
-            <div class="scenario-meta">
-              <div>
-                <span id="round-label">August · 1 of 11</span>
+          <div class="stat-grid">
+            <div class="stat-row">
+              <div class="stat-label">
+                <span class="stat-dot learning"></span>
+                <span>Learning</span>
               </div>
-              <div class="pill-soft">
-                <span id="class-meta-text">22 students · Normal difficulty</span>
+              <div class="stat-meter-shell">
+                <div class="stat-meter-fill" id="learningMeter"></div>
               </div>
+              <div class="stat-value" id="learningValue">50</div>
             </div>
-
-            <!-- Scenario image -->
-            <div id="scenario-image" style="margin-bottom: 12px; text-align:center;">
-              <img
-                id="scenario-image-img"
-                src=""
-                alt="scenario illustration"
-                style="max-width: 100%; border-radius: 12px; display:none;"
-              />
-            </div>
-
-            <!-- Previous response image -->
-            <div id="previous-response-image" style="margin-bottom: 12px; text-align:center;">
-              <img
-                id="previous-response-image-img"
-                src=""
-                alt="your previous move"
-                style="max-width: 100%; border-radius: 12px; display:none;"
-              />
-            </div>
-
-            <div class="scenario-text">
-              <div id="scenario-text"></div>
-            </div>
-
-            <div class="options" id="options-container"></div>
-
-            <div class="custom-response">
-              <label for="custom-input">Or write your own response:</label>
-              <textarea id="custom-input" placeholder="What would you actually say or do here?"></textarea>
-              <div class="custom-hint">
-                Tip: Clear expectations + empathy + reflection usually score well. Chaos and harm do not.
+            <div class="stat-row">
+              <div class="stat-label">
+                <span class="stat-dot likability"></span>
+                <span>Likability</span>
               </div>
+              <div class="stat-meter-shell">
+                <div class="stat-meter-fill" id="likabilityMeter"></div>
+              </div>
+              <div class="stat-value" id="likabilityValue">50</div>
             </div>
-
-            <div class="scenario-footer">
-              <div class="scenario-footer-left">
-                <span id="feedback-text">Pick an option or write your own response.</span>
+            <div class="stat-row">
+              <div class="stat-label">
+                <span class="stat-dot enrollment"></span>
+                <span>Enrollment</span>
               </div>
-              <div>
-                <button class="primary-btn" id="submit-btn">
-                  Submit &amp; see outcome
-                </button>
+              <div class="stat-meter-shell">
+                <div class="stat-meter-fill" id="enrollmentMeter"></div>
               </div>
+              <div class="stat-value" id="enrollmentValue">50</div>
             </div>
           </div>
 
-          <div id="end-screen" class="end-screen">
-            <div class="end-title">Year Complete &mdash; Teacher Report</div>
-            <div class="end-rank" id="end-rank"></div>
-            <div class="end-metric-row" id="end-metrics"></div>
-            <div class="end-footnote" id="end-footnote"></div>
-            <div>
-              <button class="primary-btn" id="play-again-btn">Teach another year</button>
-            </div>
+          <div class="score-summary" id="scoreSummary">
+            Total score: <strong><span id="totalScore">150</span></strong>
+            &nbsp;·&nbsp;<span id="scoreTier">“Promising Rookie”</span>
+          </div>
+
+          <div class="pill-row">
+            <span class="pill">AI-generated scenarios</span>
+            <span class="pill">Penalties for fluff &amp; repetition</span>
           </div>
         </div>
       </section>
 
-      <!-- Right: Stats / Log -->
-      <aside class="panel">
-        <div class="panel-header">
-          <div>
-            <div class="panel-title">Class Status</div>
-            <div class="panel-subtitle">
-              Your three scores update each month, plus a running log.
+      <!-- Middle: Scenario & Answer -->
+      <section class="card">
+        <div class="card-inner">
+          <div class="scenario-meta">
+            <div>
+              <div class="scenario-month" id="scenarioMonth">August · Pre-Service</div>
+              <div class="scenario-title" id="scenarioTitle">Loading…</div>
             </div>
+            <small id="scenarioFocus">Focus: routines · relationships</small>
+          </div>
+
+          <div class="scenario-tags" id="scenarioTags"></div>
+
+          <div class="scenario-text" id="scenarioText">
+            Loading scenario…
+          </div>
+
+          <label for="answerInput">
+            Your move this month
+            <span class="helper">
+              Be concrete. Recycled “kids love me” answers get hammered.
+            </span>
+          </label>
+          <textarea
+            id="answerInput"
+            autocomplete="off"
+            spellcheck="true"
+            placeholder="Describe what you actually say and do. Include trade-offs between learning, relationships, and enrollment risk."
+          ></textarea>
+
+          <div class="button-row">
+            <button class="secondary" id="nextButton" disabled>
+              Next month →
+            </button>
+            <button id="submitButton">
+              Submit month
+            </button>
+          </div>
+
+          <div class="feedback" id="feedbackBox" style="display:none;"></div>
+        </div>
+      </section>
+
+      <!-- Right: Yearbook & Roster -->
+      <section class="card">
+        <div class="card-inner">
+          <h2>Homeroom 7B</h2>
+
+          <div class="yearbook-photo-wrapper">
+            <!-- One big cursed yearbook photo per “year”. Swap this file as needed. -->
+            <img
+              id="yearbookPhoto"
+              src="yearbook-photo.jpg"
+              alt="Yearbook-style class photo for Homeroom 7B"
+            />
+            <div class="yearbook-caption" id="yearbookCaption">
+              CLASS OF 20<span id="classYearSuffix">3X</span>
+            </div>
+          </div>
+
+          <div class="roster-header">
+            <h3>Roster</h3>
+            <span id="rosterMeta">10 students · dynamic arcs</span>
+          </div>
+
+          <ul class="roster-list" id="rosterList">
+            <!-- Populated by JS -->
+          </ul>
+
+          <div class="final-outcome" id="finalOutcome" style="display:none;">
+            <!-- Filled at game end -->
           </div>
         </div>
-
-        <div class="stats-grid">
-          <!-- Learning -->
-          <div class="stat-block">
-            <div class="stat-header">
-              <div class="stat-label">Student Learning</div>
-              <div class="stat-value" id="learning-value">50 / 100</div>
-            </div>
-            <div class="stat-bar">
-              <div class="stat-bar-fill" id="learning-bar" style="width:50%;"></div>
-            </div>
-            <div class="stat-extra">
-              <span id="learning-trend">Game not started yet.</span>
-              <span>Higher = more actual learning.</span>
-            </div>
-          </div>
-
-          <!-- Likability -->
-          <div class="stat-block">
-            <div class="stat-header">
-              <div class="stat-label">Likability &amp; Respect</div>
-              <div class="stat-value" id="likability-value">50 / 100</div>
-            </div>
-            <div class="stat-bar">
-              <div class="stat-bar-fill" id="likability-bar" style="width:50%;"></div>
-            </div>
-            <div class="stat-extra">
-              <span id="likability-trend">Game not started yet.</span>
-              <span>Higher = kids like you and trust you.</span>
-            </div>
-          </div>
-
-          <!-- Students remaining -->
-          <div class="stat-block">
-            <div class="stat-header">
-              <div class="stat-label">Students Remaining</div>
-              <div class="stat-value" id="students-value">0</div>
-            </div>
-            <div class="stat-extra">
-              <span id="students-trend">No changes yet.</span>
-              <span id="students-cap-note"></span>
-            </div>
-          </div>
-
-          <!-- Progress + log -->
-          <div class="stat-block">
-            <div class="stat-header">
-              <div class="stat-label">Year Progress</div>
-              <div class="stat-value" id="progress-value">0 / 11</div>
-            </div>
-            <div class="stat-extra">
-              <span id="difficulty-label">Difficulty: Normal</span>
-              <span id="round-mini-label">No month yet</span>
-            </div>
-            <div class="log" id="log-container"></div>
-          </div>
-        </div>
-      </aside>
-    </div>
+      </section>
+    </main>
   </div>
 
   <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    // ===============================
-    // Core config
-    // ===============================
-    const API_BASE = "https://dexter-bain.onrender.com/api/hillview-sim";
+    /****************************************************
+     * Utility helpers
+     ****************************************************/
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
 
-    const MONTHS = [
-      "August","September","October","November","December",
-      "January","February","March","April","May","June"
+    function randomChoice(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function wordSet(text) {
+      return new Set(
+        text
+          .toLowerCase()
+          .split(/[^a-z0-9']+/)
+          .filter(Boolean)
+      );
+    }
+
+    // Jaccard-ish similarity for repetition penalty
+    function textSimilarity(a, b) {
+      const setA = wordSet(a);
+      const setB = wordSet(b);
+      if (!setA.size || !setB.size) return 0;
+      let common = 0;
+      for (const w of setA) {
+        if (setB.has(w)) common++;
+      }
+      return common / Math.min(setA.size, setB.size);
+    }
+
+    /****************************************************
+     * Weird student names + roles
+     ****************************************************/
+    const WEIRD_NAME_CHUNKS_FIRST = [
+      "Jor", "Jorch", "Boot", "Bootus", "Kendrew", "Zalp", "Trun",
+      "Sner", "Gleeb", "Vorz", "Ploop", "Morb", "Elbi", "Yindle",
+      "Quib", "Brinty", "Torple", "Zuzu", "Plinko", "Blep", "Snarf"
     ];
-    const TOTAL_ROUNDS = MONTHS.length;
 
-    const SCORE_MIN = 0;
-    const SCORE_MAX = 100;
-    const SCORE_START = 50;
+    const WEIRD_NAME_CHUNKS_LAST = [
+      "Flarp", "Bimble", "Gort", "Snaggs", "Von Blorp", "McCrump",
+      "Thimble", "Greeb", "Flonk", "Twitch", "Buckle", "Drimm",
+      "Platt", "Skree", "Mump", "Durf", "Greep", "Fluster", "Pint"
+    ];
 
-    // ===============================
-    // Game state
-    // ===============================
+    const STUDENT_ROLES = [
+      "perfectionist",
+      "class clown",
+      "quiet thinker",
+      "athlete",
+      "gamer",
+      "over-scheduled kid",
+      "aspiring influencer",
+      "shy artist",
+      "debater",
+      "anxious high-achiever",
+      "always late",
+      "restless kid in the back"
+    ];
+
+    function generateWeirdName() {
+      const first = randomChoice(WEIRD_NAME_CHUNKS_FIRST);
+      const last = randomChoice(WEIRD_NAME_CHUNKS_LAST);
+      return `${first} ${last}`;
+    }
+
+    function generateStudents(count = 10) {
+      const students = [];
+      const usedRoles = new Set();
+      for (let i = 0; i < count; i++) {
+        let role = randomChoice(STUDENT_ROLES);
+        if (usedRoles.has(role)) {
+          role = randomChoice(STUDENT_ROLES);
+        }
+        usedRoles.add(role);
+
+        const name = generateWeirdName();
+        const mood = 40 + Math.random() * 20; // 40–60
+        const gpa = 2.2 + Math.random() * 1.2; // 2.2–3.4
+        const risk = 30 + Math.random() * 30; // 30–60
+
+        students.push({
+          id: "s" + i,
+          name,
+          initials: name
+            .split(" ")
+            .map((p) => p[0])
+            .join("")
+            .slice(0, 2)
+            .toUpperCase(),
+          role,
+          mood,            // 0–100: happiness / buy-in
+          gpa,             // 0–4-ish
+          enrollmentRisk: risk // 0–100: higher = more likely to leave
+        });
+      }
+      return students;
+    }
+
+    /****************************************************
+     * Month metadata (AI fills in the actual scenario)
+     ****************************************************/
+    const MONTHS = [
+      {
+        id: "august",
+        label: "August · Pre-Service Week",
+        focus: "routines · relationships",
+        defaultTitle: "First Impressions",
+        defaultTags: ["Procedures", "Class culture", "First week"]
+      },
+      {
+        id: "september",
+        label: "September",
+        focus: "classroom management · tech",
+        defaultTitle: "Chromebooks vs Focus",
+        defaultTags: ["Tech", "Off-task behavior", "Boundaries"]
+      },
+      {
+        id: "october",
+        label: "October",
+        focus: "family communication",
+        defaultTitle: "The Parent Email",
+        defaultTags: ["Families", "Grades", "Trust"]
+      },
+      {
+        id: "november",
+        label: "November",
+        focus: "group work equity",
+        defaultTitle: "Group Work Gone Sideways",
+        defaultTags: ["Group work", "Equity", "Participation"]
+      },
+      {
+        id: "december",
+        label: "December",
+        focus: "culture & inclusion",
+        defaultTitle: "Holiday Landmines",
+        defaultTags: ["Holidays", "Belonging", "Sensitive topics"]
+      },
+      {
+        id: "january",
+        label: "January",
+        focus: "mid-year reset",
+        defaultTitle: "Reset Button",
+        defaultTags: ["Reset", "Routines", "Academic push"]
+      },
+      {
+        id: "february",
+        label: "February",
+        focus: "conflict · discipline",
+        defaultTitle: "Blowup in 3rd Period",
+        defaultTags: ["Student conflict", "Restorative", "Discipline"]
+      },
+      {
+        id: "march",
+        label: "March",
+        focus: "academic rigor",
+        defaultTitle: "Rigor vs Burnout",
+        defaultTags: ["Rigor", "Assessment", "Motivation"]
+      },
+      {
+        id: "april",
+        label: "April",
+        focus: "testing season",
+        defaultTitle: "The Big Test",
+        defaultTags: ["Testing", "Anxiety", "Pressure"]
+      },
+      {
+        id: "may",
+        label: "May",
+        focus: "end-of-year behavior",
+        defaultTitle: "Spring Chaos",
+        defaultTags: ["Behavior", "Fatigue", "Consistency"]
+      },
+      {
+        id: "june",
+        label: "June",
+        focus: "closure & reflection",
+        defaultTitle: "Last Week of School",
+        defaultTags: ["Closure", "Reflection", "Legacy"]
+      }
+    ];
+
+    /****************************************************
+     * Game state
+     ****************************************************/
     const state = {
-      classSize: 22,
-      studentsRemaining: 22,
-      maxStudents: 22,
-      difficultyMultiplier: 1,
-      round: 0,
-      maxRounds: TOTAL_ROUNDS,
-      learningScore: SCORE_START,
-      likabilityScore: SCORE_START,
-      lastLearningDelta: 0,
-      lastLikabilityDelta: 0,
-      lastStudentsDelta: 0,
-      history: [],
+      monthIndex: 0,
+      learning: 50,
+      likability: 50,
+      enrollment: 50,
+      totalScore: 150,
+      previousAnswers: [],
+      students: generateStudents(10),
       currentScenario: null,
-      usedScenarioIds: [],
-      awaitingNextMonth: false
+      lastSpotlightIds: []
     };
 
-    // ===============================
-    // DOM refs
-    // ===============================
-    const startScreen = document.getElementById("start-screen");
-    const scenarioContainer = document.getElementById("scenario-container");
-    const restartBtn = document.getElementById("restart-btn");
-    const startBtn = document.getElementById("start-btn");
-    const submitBtn = document.getElementById("submit-btn");
-    const playAgainBtn = document.getElementById("play-again-btn");
+    /****************************************************
+     * DOM references
+     ****************************************************/
+    const monthLabelEl = document.getElementById("monthLabel");
+    const yearProgressEl = document.getElementById("yearProgress");
+    const learningMeterEl = document.getElementById("learningMeter");
+    const likabilityMeterEl = document.getElementById("likabilityMeter");
+    const enrollmentMeterEl = document.getElementById("enrollmentMeter");
+    const learningValueEl = document.getElementById("learningValue");
+    const likabilityValueEl = document.getElementById("likabilityValue");
+    const enrollmentValueEl = document.getElementById("enrollmentValue");
+    const totalScoreEl = document.getElementById("totalScore");
+    const scoreTierEl = document.getElementById("scoreTier");
 
-    const classSizeSelect = document.getElementById("class-size");
-    const scenarioTextEl = document.getElementById("scenario-text");
-    const optionsContainer = document.getElementById("options-container");
-    const customInput = document.getElementById("custom-input");
-    const feedbackText = document.getElementById("feedback-text");
+    const scenarioMonthEl = document.getElementById("scenarioMonth");
+    const scenarioTitleEl = document.getElementById("scenarioTitle");
+    const scenarioFocusEl = document.getElementById("scenarioFocus");
+    const scenarioTagsEl = document.getElementById("scenarioTags");
+    const scenarioTextEl = document.getElementById("scenarioText");
 
-    const roundLabel = document.getElementById("round-label");
-    const roundMiniLabel = document.getElementById("round-mini-label");
-    const classMetaText = document.getElementById("class-meta-text");
-    const difficultyLabel = document.getElementById("difficulty-label");
+    const answerInputEl = document.getElementById("answerInput");
+    const submitButtonEl = document.getElementById("submitButton");
+    const nextButtonEl = document.getElementById("nextButton");
+    const feedbackBoxEl = document.getElementById("feedbackBox");
 
-    const panelTitleLabel = document.getElementById("panel-title-label");
-    const panelSubtitleLabel = document.getElementById("panel-subtitle-label");
+    const classYearSuffixEl = document.getElementById("classYearSuffix");
+    const rosterMetaEl = document.getElementById("rosterMeta");
+    const rosterListEl = document.getElementById("rosterList");
+    const finalOutcomeEl = document.getElementById("finalOutcome");
 
-    const learningValue = document.getElementById("learning-value");
-    const learningBar = document.getElementById("learning-bar");
-    const learningTrend = document.getElementById("learning-trend");
-
-    const likabilityValue = document.getElementById("likability-value");
-    const likabilityBar = document.getElementById("likability-bar");
-    const likabilityTrend = document.getElementById("likability-trend");
-
-    const studentsValue = document.getElementById("students-value");
-    const studentsTrend = document.getElementById("students-trend");
-    const studentsCapNote = document.getElementById("students-cap-note");
-
-    const progressValue = document.getElementById("progress-value");
-    const logContainer = document.getElementById("log-container");
-
-    const endScreen = document.getElementById("end-screen");
-    const endRank = document.getElementById("end-rank");
-    const endMetrics = document.getElementById("end-metrics");
-    const endFootnote = document.getElementById("end-footnote");
-
-    const scenarioImageEl = document.getElementById("scenario-image-img");
-    const previousImageEl = document.getElementById("previous-response-image-img");
-
-    // ===============================
-    // Helpers
-    // ===============================
-    function clamp(num, min, max) {
-      return Math.max(min, Math.min(max, num));
+    /****************************************************
+     * Initial setup
+     ****************************************************/
+    function initYearbookCaption() {
+      const base = 30 + Math.floor(Math.random() * 10); // 2030–2039 vibe
+      classYearSuffixEl.textContent = String(base);
     }
 
-    function computeDifficultyFromClassSize(size) {
-      return 0.85 + (size - 16) * 0.025;
+    function renderStats() {
+      const monthNumber = state.monthIndex + 1;
+      const totalMonths = MONTHS.length;
+      monthLabelEl.textContent = `Month ${monthNumber} of ${totalMonths} · ${MONTHS[state.monthIndex].label.split("·")[0].trim()}`;
+      const progressPct = ((state.monthIndex) / (totalMonths - 1)) * 100;
+      yearProgressEl.style.width = `${clamp(progressPct, 0, 100)}%`;
+
+      const l = clamp(state.learning, 0, 100);
+      const li = clamp(state.likability, 0, 100);
+      const e = clamp(state.enrollment, 0, 100);
+
+      learningMeterEl.style.width = `${l}%`;
+      likabilityMeterEl.style.width = `${li}%`;
+      enrollmentMeterEl.style.width = `${e}%`;
+
+      learningValueEl.textContent = Math.round(l);
+      likabilityValueEl.textContent = Math.round(li);
+      enrollmentValueEl.textContent = Math.round(e);
+
+      state.totalScore = Math.round(l + li + e);
+      totalScoreEl.textContent = state.totalScore;
+
+      let tier = "“Promising Rookie”";
+      if (state.totalScore >= 260) tier = "“Beloved Wizard Teacher”";
+      else if (state.totalScore >= 230) tier = "“Campus Legend”";
+      else if (state.totalScore >= 200) tier = "“Trusted Veteran”";
+      else if (state.totalScore <= 150) tier = "“On an Improvement Plan”";
+      scoreTierEl.textContent = tier;
     }
 
-    function difficultyLabelFromMultiplier(mult) {
-      if (mult <= 0.95) return "Difficulty: Chill";
-      if (mult <= 1.05) return "Difficulty: Normal";
-      if (mult <= 1.15) return "Difficulty: Busy";
-      if (mult <= 1.25) return "Difficulty: Crowded";
-      return "Difficulty: Legendary";
+    function renderRoster(spotlightIds = []) {
+      rosterListEl.innerHTML = "";
+      rosterMetaEl.textContent = `${state.students.length} students · dynamic arcs`;
+
+      state.students.forEach((s) => {
+        const li = document.createElement("li");
+        li.className = "roster-item";
+        if (spotlightIds.includes(s.id)) {
+          li.classList.add("spotlight");
+        }
+
+        const top = document.createElement("div");
+        top.className = "roster-top-row";
+
+        const name = document.createElement("div");
+        name.className = "roster-name";
+
+        const avatar = document.createElement("div");
+        avatar.className = "roster-avatar";
+        avatar.textContent = s.initials || "?";
+
+        const label = document.createElement("span");
+        label.textContent = s.name;
+
+        name.appendChild(avatar);
+        name.appendChild(label);
+
+        const moodEl = document.createElement("div");
+        moodEl.className = "roster-mood";
+        const mood = s.mood;
+        let moodIcon = "😐";
+        if (mood >= 70) moodIcon = "😄";
+        else if (mood >= 55) moodIcon = "🙂";
+        else if (mood <= 35) moodIcon = "😬";
+        moodEl.textContent = `${moodIcon} ${Math.round(mood)}`;
+
+        top.appendChild(name);
+        top.appendChild(moodEl);
+
+        const meta = document.createElement("div");
+        meta.className = "roster-meta";
+
+        const role = document.createElement("span");
+        role.className = "roster-pill";
+        role.textContent = s.role;
+
+        const gpa = document.createElement("span");
+        gpa.className = "roster-pill";
+        gpa.textContent = `GPA-ish: ${s.gpa.toFixed(1)}`;
+
+        const risk = document.createElement("span");
+        risk.className = "roster-pill";
+        const riskLabel = s.enrollmentRisk >= 70 ? "High transfer risk" :
+          s.enrollmentRisk >= 50 ? "Some transfer chatter" :
+          "Likely to stay";
+        risk.textContent = riskLabel;
+
+        meta.appendChild(role);
+        meta.appendChild(gpa);
+        meta.appendChild(risk);
+
+        li.appendChild(top);
+        li.appendChild(meta);
+
+        rosterListEl.appendChild(li);
+      });
     }
 
-    function formatTrend(delta) {
-      if (delta > 12) return `Last move: ▲ huge gain (+${delta})`;
-      if (delta > 5) return `Last move: ▲ strong gain (+${delta})`;
-      if (delta > 0) return `Last move: ▲ small gain (+${delta})`;
-      if (delta === 0) return "Last move: ▬ no major change";
-      if (delta < -12) return `Last move: ▼ huge drop (${delta})`;
-      if (delta < -5) return `Last move: ▼ strong drop (${delta})`;
-      return `Last move: ▼ small drop (${delta})`;
-    }
-
-    function formatStudentTrend(delta) {
-      if (delta > 2) return `Enrollment spike: +${delta} students joined.`;
-      if (delta > 0) return `Small gain: +${delta} student joined.`;
-      if (delta === 0) return "No enrollment change.";
-      if (delta < -2) return `${-delta} students left your class. Rough month.`;
-      return `${-delta} student left your class.`;
-    }
-
-    function appendLogEntry(entry) {
-      const div = document.createElement("div");
-      div.className = "log-item";
-      div.innerHTML = `<strong>${entry.monthLabel}:</strong> ${entry.headline}`;
-      logContainer.appendChild(div);
-      logContainer.scrollTop = logContainer.scrollHeight;
-    }
-
-    function updateScenarioImage(url) {
-      if (!scenarioImageEl) return;
-      if (url) {
-        scenarioImageEl.src = url;
-        scenarioImageEl.style.display = "block";
-      } else {
-        scenarioImageEl.style.display = "none";
-      }
-    }
-
-    function updateDecisionImage(url) {
-      if (!previousImageEl) return;
-      if (url) {
-        previousImageEl.src = url;
-        previousImageEl.style.display = "block";
-      } else {
-        previousImageEl.style.display = "none";
-      }
-    }
-
-    // ===============================
-    // UI updates
-    // ===============================
-    function updateStatsUI() {
-      learningValue.textContent = `${state.learningScore} / 100`;
-      likabilityValue.textContent = `${state.likabilityScore} / 100`;
-
-      learningBar.style.width = `${state.learningScore}%`;
-      likabilityBar.style.width = `${state.likabilityScore}%`;
-
-      if (state.round === 0) {
-        learningTrend.textContent = "Game not started yet.";
-        likabilityTrend.textContent = "Game not started yet.";
-        studentsTrend.textContent = "No changes yet.";
-      } else {
-        learningTrend.textContent = formatTrend(state.lastLearningDelta);
-        likabilityTrend.textContent = formatTrend(state.lastLikabilityDelta);
-        studentsTrend.textContent = formatStudentTrend(state.lastStudentsDelta);
-      }
-
-      studentsValue.textContent = state.studentsRemaining;
-      studentsCapNote.textContent = `Started with ${state.classSize}. Max so far: ${state.maxStudents}.`;
-
-      progressValue.textContent = `${state.round} / ${state.maxRounds}`;
-      if (state.round > 0 && state.round <= state.maxRounds) {
-        roundMiniLabel.textContent = `${MONTHS[state.round - 1]} (${state.round} of ${state.maxRounds})`;
-      } else {
-        roundMiniLabel.textContent = "No month yet";
-      }
-
-      difficultyLabel.textContent = difficultyLabelFromMultiplier(state.difficultyMultiplier);
-    }
-
-    function showStartScreen() {
-      startScreen.style.display = "flex";
-      scenarioContainer.style.display = "none";
-      restartBtn.style.display = "none";
-      panelTitleLabel.textContent = "Setup";
-      panelSubtitleLabel.textContent =
-        "Choose your class size. Learning and likability both start at 50 / 100.";
-      endScreen.style.display = "none";
-      updateScenarioImage(null);
-      updateDecisionImage(null);
-    }
-
-    function showScenarioScreen() {
-      startScreen.style.display = "none";
-      scenarioContainer.style.display = "block";
-      restartBtn.style.display = "inline-block";
-      panelTitleLabel.textContent = "Live Scenario";
-      panelSubtitleLabel.textContent =
-        "The AI generates a situation. You decide what to do.";
-      endScreen.style.display = "none";
-    }
-
-    function showEndScreen() {
-      endScreen.style.display = "flex";
-      panelTitleLabel.textContent = "Year Complete";
-      panelSubtitleLabel.textContent = "See how you did, then try a new year.";
-      feedbackText.textContent = "Year finished. Check your report card on the right.";
-      feedbackText.classList.remove("error-text");
-    }
-
-    function computeFinalRank() {
-      const l = state.learningScore;
-      const r = state.likabilityScore;
-      const enrollRatio = state.studentsRemaining / state.classSize;
-
-      let rank = "";
-      let blurb = "";
-
-      if (l >= 85 && r >= 85 && enrollRatio >= 0.95) {
-        rank = "🟢 Hillview Legend";
-        blurb =
-          "Students learned a ton, almost nobody left your class, and parents talk about you in the good way at soccer games.";
-      } else if (l >= 80 && r >= 75 && enrollRatio >= 0.9) {
-        rank = "🟢 High-Impact Teacher";
-        blurb =
-          "You’re demanding and fair. Kids might complain a bit, but the results and relationships are strong.";
-      } else if (l >= 70 && r >= 65 && enrollRatio >= 0.85) {
-        rank = "🟡 Solid & Growing";
-        blurb =
-          "Lots went right. A few decisions cost you, but you’re close to elite with some tweaks.";
-      } else if (l >= 60 && r >= 55 && enrollRatio >= 0.75) {
-        rank = "🟡 Survived the Year";
-        blurb =
-          "Pretty realistic middle school energy. Wins, losses, a lot of learning—some of it yours.";
-      } else if (l >= 45 || r >= 45 || enrollRatio >= 0.6) {
-        rank = "🟠 Chaotic Neutral Teacher";
-        blurb =
-          "Memorable for sure. Some students thrived, others transferred. Plenty of stories, mixed outcomes.";
-      } else {
-        rank = "🔴 Walking Content for Teacher TikTok";
-        blurb =
-          "Admin, families, and students would all have opinions. On the plus side, you can immediately replay with no HR meeting.";
-      }
-
-      return { rank, blurb };
-    }
-
-    function renderEndScreen() {
-      const { rank, blurb } = computeFinalRank();
-
-      endRank.textContent = rank;
-      endMetrics.innerHTML = `
-        <span>Learning: <strong>${state.learningScore}</strong> / 100</span>
-        <span>Likability: <strong>${state.likabilityScore}</strong> / 100</span>
-        <span>Students remaining: <strong>${state.studentsRemaining}</strong> (started with ${state.classSize})</span>
-      `;
-
-      const diffLabel = difficultyLabelFromMultiplier(state.difficultyMultiplier);
-      endFootnote.textContent =
-        `${blurb} You played on ${diffLabel.replace("Difficulty: ", "").toLowerCase()} with ${state.classSize} starting students.`;
-
-      showEndScreen();
-    }
-
-    // ===============================
-    // API calls
-    // ===============================
-    async function fetchScenarioForCurrentMonth() {
-      const month = MONTHS[state.round - 1];
-      scenarioTextEl.textContent =
-        "Asking the AI to come up with a new Hillview situation for this month…";
-      optionsContainer.innerHTML = "";
-      customInput.value = "";
-      feedbackText.textContent = "The AI is thinking about your classroom…";
-      feedbackText.classList.remove("error-text");
-      submitBtn.disabled = true;
-      updateScenarioImage(null);
+    /****************************************************
+     * AI scenario generation
+     ****************************************************/
+    async function generateScenarioForMonth(monthConfig, students) {
+      // This is where you wire in your existing AI generation.
+      // Expected response JSON:
+      // {
+      //   title: string,
+      //   text: string,
+      //   tags?: string[],
+      //   focus?: string,
+      //   spotlightIds?: string[]   // subset of students[].id
+      // }
+      //
+      // The prompt on your server should tell the AI:
+      // - Use the provided student roster and reference 2–3 by name.
+      // - Keep it 2–4 paragraphs.
+      // - Describe a realistic middle-school situation for that month.
+      // - Return JSON in the structure above.
 
       try {
-        const res = await fetch(`${API_BASE}/scenario`, {
+        const response = await fetch("/api/generate-scenario", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            month,
-            round: state.round,
-            stats: {
-              learningScore: state.learningScore,
-              likabilityScore: state.likabilityScore,
-              studentsRemaining: state.studentsRemaining,
-              classSize: state.classSize
-            },
-            usedScenarioIds: state.usedScenarioIds
+            monthId: monthConfig.id,
+            monthLabel: monthConfig.label,
+            focus: monthConfig.focus,
+            defaultTitle: monthConfig.defaultTitle,
+            defaultTags: monthConfig.defaultTags,
+            students
           })
         });
 
-        if (!res.ok) throw new Error("Scenario API error");
-        const data = await res.json();
-
-        state.currentScenario = {
-          id: data.id,
-          title: data.title || month,
-          prompt: data.prompt,
-          options: Array.isArray(data.options) ? data.options : [],
-          imageUrl: data.imageUrl || null
-        };
-
-        if (data.id && !state.usedScenarioIds.includes(data.id)) {
-          state.usedScenarioIds.push(data.id);
+        if (response.ok) {
+          const data = await response.json();
+          return {
+            title: data.title || monthConfig.defaultTitle,
+            text: data.text || "Your AI scenario text goes here.",
+            tags: Array.isArray(data.tags) && data.tags.length ? data.tags : monthConfig.defaultTags,
+            focus: data.focus || monthConfig.focus,
+            spotlightIds: Array.isArray(data.spotlightIds) ? data.spotlightIds : pickRandomSpotlights(students)
+          };
         }
-
-        renderScenario();
       } catch (err) {
-        console.error(err);
-        scenarioTextEl.textContent =
-          "The AI couldn't be reached right now. Try again in a bit, or reload the page.";
-        optionsContainer.innerHTML = "";
-        updateScenarioImage(null);
-      } finally {
-        submitBtn.disabled = false;
+        console.error("Error fetching AI scenario:", err);
       }
+
+      // Fallback if your AI endpoint is down:
+      const fallbackSpotlight = pickRandomSpotlights(students);
+      const [s1, s2] = fallbackSpotlight.map(
+        id => students.find(s => s.id === id) || students[0]
+      );
+      return {
+        title: monthConfig.defaultTitle,
+        text:
+          `Fallback scenario for ${monthConfig.label}.\n\n` +
+          `${s1.name} and ${s2.name} are central to this month's drama. ` +
+          `Describe what you do and say to support them while balancing learning, likability, and enrollment.`,
+        tags: monthConfig.defaultTags,
+        focus: monthConfig.focus,
+        spotlightIds: fallbackSpotlight
+      };
     }
 
-    async function callEvaluateAPI(choicePayload) {
-      const month = MONTHS[state.round - 1];
+    function pickRandomSpotlights(students, count = 2) {
+      const ids = students.map(s => s.id);
+      const out = [];
+      while (out.length < count && ids.length) {
+        const idx = Math.floor(Math.random() * ids.length);
+        out.push(ids.splice(idx, 1)[0]);
+      }
+      return out;
+    }
 
-      const res = await fetch(`${API_BASE}/evaluate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          scenarioId: state.currentScenario.id,
-          month,
-          round: state.round,
-          classSize: state.classSize,
-          stats: {
-            learningScore: state.learningScore,
-            likabilityScore: state.likabilityScore,
-            studentsRemaining: state.studentsRemaining
-          },
-          choice: choicePayload
-        })
+    async function loadCurrentMonthScenario() {
+      const monthConfig = MONTHS[state.monthIndex];
+
+      scenarioMonthEl.textContent = monthConfig.label;
+      scenarioTitleEl.textContent = "Loading…";
+      scenarioFocusEl.textContent = `Focus: ${monthConfig.focus}`;
+      scenarioTagsEl.innerHTML = "";
+      scenarioTextEl.textContent = "Asking the AI to generate a scenario for this month…";
+
+      submitButtonEl.disabled = false;
+      nextButtonEl.disabled = true;
+      answerInputEl.disabled = false;
+      feedbackBoxEl.style.display = "none";
+
+      const scenario = await generateScenarioForMonth(monthConfig, state.students);
+      state.currentScenario = scenario;
+      state.lastSpotlightIds = scenario.spotlightIds || [];
+
+      scenarioTitleEl.textContent = scenario.title;
+      scenarioFocusEl.textContent = `Focus: ${scenario.focus}`;
+      scenarioTextEl.textContent = scenario.text;
+
+      scenarioTagsEl.innerHTML = "";
+      (scenario.tags || []).forEach((tag) => {
+        const span = document.createElement("span");
+        span.className = "scenario-tag";
+        span.textContent = tag;
+        scenarioTagsEl.appendChild(span);
       });
 
-      if (!res.ok) throw new Error("Evaluate API error");
-      return res.json();
+      renderRoster(state.lastSpotlightIds);
+      renderStats();
     }
 
-    // ===============================
-    // Scenario render
-    // ===============================
-    function renderScenario() {
-      const scenario = state.currentScenario;
-      if (!scenario) return;
+    /****************************************************
+     * Scoring logic – stricter, with fluff & repetition penalties
+     ****************************************************/
+    const FLUFF_PATTERNS = [
+      /kids (love|adore) me/i,
+      /the kids love me/i,
+      /they're learning (a lot|so much)/i,
+      /everything is (great|fine)/i,
+      /vibes? are (good|great|immaculate)/i,
+      /i'm a (great|good) teacher/i,
+      /it'll work itself out/i
+    ];
 
-      const monthLabel = MONTHS[state.round - 1] || `Month ${state.round}`;
-      roundLabel.textContent = `${monthLabel} · ${state.round} of ${state.maxRounds}`;
-      scenarioTextEl.textContent =
-        scenario.prompt || "The AI forgot to send a prompt. Oops.";
+    function analyzeAnswer(answerText) {
+      const trimmed = answerText.trim();
+      const words = trimmed.split(/\s+/).filter(Boolean);
+      const lengthScore = words.length >= 40 ? 1 : words.length >= 20 ? 0 : -1;
 
-      updateScenarioImage(scenario.imageUrl || null);
-      updateDecisionImage(null);
-
-      optionsContainer.innerHTML = "";
-      (scenario.options || []).forEach((opt, index) => {
-        const btn = document.createElement("button");
-        btn.className = "option-btn";
-        btn.textContent = opt.text;
-        btn.dataset.optionId = opt.id || `opt-${index + 1}`;
-        btn.addEventListener("click", () => {
-          document.querySelectorAll(".option-btn").forEach(b =>
-            b.classList.remove("selected")
-          );
-          btn.classList.add("selected");
-          feedbackText.textContent =
-            "Option selected. You can still edit or replace it with your own written response.";
-          feedbackText.classList.remove("error-text");
-        });
-        optionsContainer.appendChild(btn);
+      // Does the answer reference any student by name?
+      let studentRefs = 0;
+      const mentionedStudents = [];
+      state.students.forEach((s) => {
+        const rx = new RegExp("\\b" + s.name.split(" ")[0] + "\\b", "i");
+        if (rx.test(trimmed)) {
+          studentRefs++;
+          mentionedStudents.push(s.id);
+        }
       });
 
-      customInput.value = "";
-      feedbackText.textContent = "Pick an option or write your own response.";
-      feedbackText.classList.remove("error-text");
-
-      state.awaitingNextMonth = false;
-      submitBtn.textContent = "Submit & see outcome";
-    }
-
-    // ===============================
-    // Game lifecycle
-    // ===============================
-    function resetGame() {
-      state.classSize = parseInt(classSizeSelect.value, 10) || 22;
-      state.studentsRemaining = state.classSize;
-      state.maxStudents = state.classSize;
-      state.difficultyMultiplier = computeDifficultyFromClassSize(state.classSize);
-      state.round = 0;
-      state.learningScore = SCORE_START;
-      state.likabilityScore = SCORE_START;
-      state.lastLearningDelta = 0;
-      state.lastLikabilityDelta = 0;
-      state.lastStudentsDelta = 0;
-      state.history = [];
-      state.currentScenario = null;
-      state.usedScenarioIds = [];
-      state.awaitingNextMonth = false;
-
-      classMetaText.textContent = `${state.classSize} students · ${difficultyLabelFromMultiplier(
-        state.difficultyMultiplier
-      ).replace("Difficulty: ", "")}`;
-      logContainer.innerHTML = "";
-      updateStatsUI();
-      showStartScreen();
-    }
-
-    function startYear() {
-      state.classSize = parseInt(classSizeSelect.value, 10) || 22;
-      state.studentsRemaining = state.classSize;
-      state.maxStudents = state.classSize;
-      state.difficultyMultiplier = computeDifficultyFromClassSize(state.classSize);
-      state.round = 0;
-      state.learningScore = SCORE_START;
-      state.likabilityScore = SCORE_START;
-      state.lastLearningDelta = 0;
-      state.lastLikabilityDelta = 0;
-      state.lastStudentsDelta = 0;
-      state.history = [];
-      state.currentScenario = null;
-      state.usedScenarioIds = [];
-      state.awaitingNextMonth = false;
-
-      classMetaText.textContent = `${state.classSize} students · ${difficultyLabelFromMultiplier(
-        state.difficultyMultiplier
-      ).replace("Difficulty: ", "")}`;
-
-      logContainer.innerHTML = "";
-      appendLogEntry({
-        monthLabel: "Setup",
-        headline: `New year: ${state.classSize} students. Learning and likability start at 50 / 100.`
+      // "Seriousness" keywords
+      const thinkingWords = [
+        "plan", "routine", "rubric", "feedback", "call home", "email",
+        "conference", "restorative", "reflection", "role", "expectation",
+        "call", "family", "guardian", "explicit", "practice"
+      ];
+      let thinkingHits = 0;
+      thinkingWords.forEach((w) => {
+        if (trimmed.toLowerCase().includes(w)) thinkingHits++;
       });
 
-      nextRound();
-      showScenarioScreen();
-      updateStatsUI();
+      // Tradeoff words
+      const tradeoffWords = ["however", "on the other hand", "trade-off", "tradeoff", "balance", "tension", "at the same time"];
+      let tradeoffHits = 0;
+      tradeoffWords.forEach((w) => {
+        if (trimmed.toLowerCase().includes(w)) tradeoffHits++;
+      });
+
+      // Fluff penalty
+      let fluffPenalty = 0;
+      FLUFF_PATTERNS.forEach((rx) => {
+        if (rx.test(trimmed)) {
+          fluffPenalty -= 7; // each instance hurts
+        }
+      });
+
+      // Repetition penalty (compare to last few answers)
+      let repetitionPenalty = 0;
+      state.previousAnswers.slice(-3).forEach((prev) => {
+        const sim = textSimilarity(prev, trimmed);
+        if (sim > 0.88) {
+          repetitionPenalty -= 18; // brutal copy-paste penalty
+        } else if (sim > 0.78) {
+          repetitionPenalty -= 10;
+        }
+      });
+
+      // Base quality score: harder to score high
+      let quality =
+        4 * lengthScore +
+        3 * Math.min(studentRefs, 3) +
+        2 * Math.min(thinkingHits, 4) +
+        3 * Math.min(tradeoffHits, 2) +
+        fluffPenalty +
+        repetitionPenalty / 2;
+
+      quality = clamp(quality, -18, 18);
+
+      // Map quality to stat deltas. Keep gains modest so high scores are rare.
+      let learningDelta = 0;
+      let likabilityDelta = 0;
+      let enrollmentDelta = 0;
+
+      // Noise so not every similar answer yields identical numbers
+      const noise = () => (Math.random() - 0.5) * 1.5;
+
+      if (quality <= -8) {
+        learningDelta = -6 + noise();
+        likabilityDelta = -5 + noise();
+        enrollmentDelta = -5 + noise();
+      } else if (quality <= -3) {
+        learningDelta = -3 + noise();
+        likabilityDelta = -2 + noise();
+        enrollmentDelta = -3 + noise();
+      } else if (quality <= 2) {
+        learningDelta = -1 + noise();
+        likabilityDelta = -1 + noise();
+        enrollmentDelta = -1 + noise();
+      } else if (quality <= 7) {
+        learningDelta = 2 + noise();
+        likabilityDelta = 1 + noise();
+        enrollmentDelta = 1 + noise();
+      } else if (quality <= 13) {
+        learningDelta = 3.5 + noise();
+        likabilityDelta = 2.5 + noise();
+        enrollmentDelta = 2 + noise();
+      } else {
+        // Peak performance, still capped
+        learningDelta = 5 + noise();
+        likabilityDelta = 3.5 + noise();
+        enrollmentDelta = 3 + noise();
+      }
+
+      // Slight overall difficulty bump: shrink positive deltas
+      if (learningDelta > 0) learningDelta *= 0.8;
+      if (likabilityDelta > 0) likabilityDelta *= 0.8;
+      if (enrollmentDelta > 0) enrollmentDelta *= 0.8;
+
+      return {
+        quality,
+        lengthScore,
+        studentRefs,
+        thinkingHits,
+        tradeoffHits,
+        fluffPenalty,
+        repetitionPenalty,
+        deltas: {
+          learningDelta,
+          likabilityDelta,
+          enrollmentDelta
+        },
+        mentionedStudents
+      };
     }
 
-    function nextRound() {
-      state.round += 1;
-      if (state.round > state.maxRounds) {
-        renderEndScreen();
+    function applyDeltasToStats(deltas) {
+      state.learning = clamp(state.learning + deltas.learningDelta, 0, 100);
+      state.likability = clamp(state.likability + deltas.likabilityDelta, 0, 100);
+      state.enrollment = clamp(state.enrollment + deltas.enrollmentDelta, 0, 100);
+    }
+
+    function applyDeltasToStudents(deltas, mentionedStudents) {
+      // Nudge spotlight + mentioned kids a bit more
+      const focusIds = new Set([...state.lastSpotlightIds, ...mentionedStudents]);
+      state.students.forEach((s) => {
+        const weight = focusIds.has(s.id) ? 1.4 : 0.9;
+
+        s.gpa = clamp(
+          s.gpa + (deltas.learningDelta / 20) * weight,
+          1.5,
+          4.1
+        );
+
+        s.mood = clamp(
+          s.mood + (deltas.likabilityDelta / 2) * weight,
+          10,
+          100
+        );
+
+        s.enrollmentRisk = clamp(
+          s.enrollmentRisk - (deltas.enrollmentDelta / 2) * weight,
+          0,
+          100
+        );
+      });
+    }
+
+    function renderFeedback(analysis) {
+      const {
+        quality,
+        lengthScore,
+        studentRefs,
+        thinkingHits,
+        tradeoffHits,
+        fluffPenalty,
+        repetitionPenalty,
+        deltas
+      } = analysis;
+
+      const messages = [];
+      if (lengthScore < 0) {
+        messages.push("Very short answer — felt more like a reaction than a plan.");
+      } else if (lengthScore > 0) {
+        messages.push("Gave enough detail to see what actually happens in the room.");
+      }
+
+      if (studentRefs === 0) {
+        messages.push("You didn't reference any students by name — 7B felt generic.");
+      } else if (studentRefs === 1) {
+        messages.push("You connected the plan to at least one specific student.");
+      } else {
+        messages.push("You grounded your plan in multiple named students.");
+      }
+
+      if (thinkingHits > 0) {
+        messages.push("You mentioned structures like routines, feedback, or family contact.");
+      }
+
+      if (tradeoffHits > 0) {
+        messages.push("You acknowledged real trade-offs instead of pretending everything wins.");
+      }
+
+      if (fluffPenalty < 0) {
+        messages.push("You leaned on fluff like “the kids love me” instead of specific actions.");
+      }
+
+      if (repetitionPenalty < 0) {
+        messages.push("Answer was very similar to something you said in a previous month.");
+      }
+
+      const overall =
+        quality <= -8
+          ? "This month went sideways. Kids, parents, and admin all felt it."
+          : quality <= -3
+          ? "You survived the month, but at a noticeable cost to the classroom."
+          : quality <= 2
+          ? "Neutral month. Nothing on fire, but not much moved forward either."
+          : quality <= 8
+          ? "Solid month — students felt the impact of your choices."
+          : quality <= 13
+          ? "Strong month — you threaded some tough trade-offs."
+          : "Peak month. This is the kind of move people talk about in June.";
+
+      feedbackBoxEl.style.display = "block";
+      feedbackBoxEl.classList.remove("good", "bad");
+      if (quality >= 3) feedbackBoxEl.classList.add("good");
+      if (quality <= -3) feedbackBoxEl.classList.add("bad");
+
+      const learningChange = deltas.learningDelta.toFixed(1);
+      const likeChange = deltas.likabilityDelta.toFixed(1);
+      const enrollChange = deltas.enrollmentDelta.toFixed(1);
+
+      feedbackBoxEl.innerHTML = `
+        <h4>Month outcome</h4>
+        <p>${overall}</p>
+        <ul>
+          <li>Learning: ${learningChange > 0 ? "+" : ""}${learningChange}</li>
+          <li>Likability: ${likeChange > 0 ? "+" : ""}${likeChange}</li>
+          <li>Enrollment: ${enrollChange > 0 ? "+" : ""}${enrollChange}</li>
+        </ul>
+        <p>${messages.join("<br/>")}</p>
+      `;
+    }
+
+    /****************************************************
+     * End-of-year summary
+     ****************************************************/
+    function renderFinalOutcome() {
+      const L = state.learning;
+      const LI = state.likability;
+      const E = state.enrollment;
+
+      let summary = "";
+      if (L >= 70 && LI >= 70 && E >= 70) {
+        summary = "You pulled off the unicorn year: high learning, kids mostly like you, and families stay put.";
+      } else if (L >= 70 && LI < 50) {
+        summary = "Academically strong, but a lot of kids will remember this as their ‘tough teacher’ year.";
+      } else if (L < 50 && LI >= 70) {
+        summary = "They'll miss you, but next year's teacher is going to ask some questions about those gaps.";
+      } else if (E < 50) {
+        summary = "Enough families considered transferring that admin will want to debrief next year.";
+      } else {
+        summary = "It was a mixed year — some bright spots, some bruises, lots to learn from.";
+      }
+
+      finalOutcomeEl.style.display = "block";
+      finalOutcomeEl.innerHTML = `
+        <strong>Year summary</strong><br/>
+        Learning: ${Math.round(L)} · Likability: ${Math.round(LI)} · Enrollment: ${Math.round(E)}<br/><br/>
+        ${summary}
+      `;
+    }
+
+    /****************************************************
+     * Event handlers
+     ****************************************************/
+    submitButtonEl.addEventListener("click", () => {
+      const text = answerInputEl.value.trim();
+      if (!text) {
+        alert("Give your students something more than silence.");
         return;
       }
-      fetchScenarioForCurrentMonth();
-      updateStatsUI();
-    }
 
-    // ===============================
-    // Submit flow
-    // ===============================
-    async function handleSubmitClick() {
-      if (!state.currentScenario) return;
+      const analysis = analyzeAnswer(text);
+      applyDeltasToStats(analysis.deltas);
+      applyDeltasToStudents(analysis.deltas, analysis.mentionedStudents);
+      renderStats();
+      renderRoster(state.lastSpotlightIds);
+      renderFeedback(analysis);
 
-      if (!state.awaitingNextMonth) {
-        const selectedBtn = document.querySelector(".option-btn.selected");
-        const rawCustom = customInput.value.trim();
+      state.previousAnswers.push(text);
 
-        let choicePayload;
-        if (rawCustom) {
-          choicePayload = { type: "custom", customText: rawCustom };
-        } else if (selectedBtn && selectedBtn.dataset.optionId) {
-          choicePayload = { type: "option", optionId: selectedBtn.dataset.optionId };
-        } else {
-          feedbackText.textContent =
-            "Pick an option or write your own response before submitting.";
-          feedbackText.classList.add("error-text");
-          return;
-        }
-
-        submitBtn.disabled = true;
-        feedbackText.classList.remove("error-text");
-        feedbackText.textContent =
-          "The AI is grading your move and updating your class…";
-
-        try {
-          const result = await callEvaluateAPI(choicePayload);
-
-          state.learningScore = clamp(
-            state.learningScore + (result.learningDelta || 0),
-            SCORE_MIN,
-            SCORE_MAX
-          );
-          state.likabilityScore = clamp(
-            state.likabilityScore + (result.likabilityDelta || 0),
-            SCORE_MIN,
-            SCORE_MAX
-          );
-          state.lastLearningDelta = result.learningDelta || 0;
-          state.lastLikabilityDelta = result.likabilityDelta || 0;
-
-          const deltaStudents = result.studentsDelta || 0;
-          const newStudents = clamp(
-            state.studentsRemaining + deltaStudents,
-            0,
-            state.classSize + 10
-          );
-          state.lastStudentsDelta = newStudents - state.studentsRemaining;
-          state.studentsRemaining = newStudents;
-          state.maxStudents = Math.max(state.maxStudents, state.studentsRemaining);
-
-          const monthLabel = MONTHS[state.round - 1] || `Month ${state.round}`;
-          const commentary =
-            result.commentary || "The AI forgot to explain this decision.";
-          const headline =
-            result.logHeadline ||
-            `Learning ${state.lastLearningDelta >= 0 ? "+" : ""}${state.lastLearningDelta}, ` +
-              `Likability ${state.lastLikabilityDelta >= 0 ? "+" : ""}${state.lastLikabilityDelta}, ` +
-              `Students ${state.lastStudentsDelta >= 0 ? "+" : ""}${state.lastStudentsDelta}.`;
-
-          state.history.push({
-            round: state.round,
-            monthLabel,
-            scenarioId: state.currentScenario.id,
-            choicePayload,
-            learningDelta: state.lastLearningDelta,
-            likabilityDelta: state.lastLikabilityDelta,
-            studentsDelta: state.lastStudentsDelta,
-            commentary
-          });
-
-          appendLogEntry({ monthLabel, headline });
-          feedbackText.textContent = commentary;
-          feedbackText.classList.remove("error-text");
-
-          updateDecisionImage(result.decisionImageUrl || null);
-          updateStatsUI();
-
-          state.awaitingNextMonth = true;
-          submitBtn.textContent =
-            state.round >= state.maxRounds ? "See final report" : "Go to next month";
-        } catch (err) {
-          console.error(err);
-          feedbackText.textContent =
-            "The AI couldn't grade that move right now. Try again or reload the page.";
-          feedbackText.classList.add("error-text");
-        } finally {
-          submitBtn.disabled = false;
-        }
-      } else {
-        state.awaitingNextMonth = false;
-        submitBtn.textContent = "Submit & see outcome";
-
-        if (state.round >= state.maxRounds) {
-          renderEndScreen();
-        } else {
-          nextRound();
-        }
-      }
-    }
-
-    // ===============================
-    // Events
-    // ===============================
-    startBtn.addEventListener("click", startYear);
-    restartBtn.addEventListener("click", resetGame);
-    submitBtn.addEventListener("click", handleSubmitClick);
-    playAgainBtn.addEventListener("click", startYear);
-
-    classSizeSelect.addEventListener("change", () => {
-      const previewSize = parseInt(classSizeSelect.value, 10) || 22;
-      const previewDiff = computeDifficultyFromClassSize(previewSize);
-      classMetaText.textContent = `${previewSize} students · ${difficultyLabelFromMultiplier(
-        previewDiff
-      ).replace("Difficulty: ", "")}`;
+      submitButtonEl.disabled = true;
+      answerInputEl.disabled = true;
+      nextButtonEl.disabled = state.monthIndex >= MONTHS.length - 1;
     });
 
-    // Init
-    resetGame();
-  });
+    nextButtonEl.addEventListener("click", () => {
+      if (state.monthIndex >= MONTHS.length - 1) return;
+      state.monthIndex += 1;
+      answerInputEl.value = "";
+      feedbackBoxEl.style.display = "none";
+      submitButtonEl.disabled = false;
+      answerInputEl.disabled = false;
+      nextButtonEl.disabled = true;
+      loadCurrentMonthScenario().then(() => {
+        if (state.monthIndex === MONTHS.length - 1) {
+          // Last month will show summary after submit.
+        }
+      });
+    });
+
+    /****************************************************
+     * Kick off
+     ****************************************************/
+    (function startGame() {
+      initYearbookCaption();
+      renderStats();
+      renderRoster();
+      loadCurrentMonthScenario().then(() => {
+        // When last month is submitted, show final outcome
+        const observer = new MutationObserver(() => {
+          if (state.monthIndex === MONTHS.length - 1 && submitButtonEl.disabled) {
+            renderFinalOutcome();
+          }
+        });
+        observer.observe(feedbackBoxEl, { childList: true, subtree: true });
+      });
+    })();
   </script>
 </body>
 </html>
